@@ -76,3 +76,8 @@ Visit http://127.0.0.1:8787/api/health to check the bridge. A healthy bridge doe
 | Mesh is not poseable | AI-generated GLB geometry is not necessarily rigged. Rigging and limb separation require additional processing. |
 
 **Privacy and costs:** The local AI pipeline does not require a paid image-to-3D API, but model downloads, electricity, storage, and hardware are your responsibility. The local bridge is not designed as a public, multi-user service. Browser-local workspaces are not automatically synced between devices, and files committed to a public GitHub repository are publicly accessible.
+
+
+## Compact interface
+
+The workspace now defaults to **Compact view** on desktop: the stage, inspector, and frame timeline share the available browser height, with independent scrolling inside the inspector and timeline rather than requiring page scrolling. Use the **Compact view / Roomy view** button in the top toolbar to switch layouts. Your choice is remembered in this browser. On small screens the stage and controls remain stacked for touch usability. Browser zoom (Ctrl + minus) can provide more room on very small displays.

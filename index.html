@@ -255,6 +255,57 @@ select{background:var(--panel-2);border:1px solid var(--line-2);border-radius:6p
   .cell{min-width:52px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Compact desktop workspace: stage, inspector and timeline fit in one viewport. */
+@media (min-width:980px){
+ html,body{height:100%;height:100dvh}
+ .shell{height:100dvh;min-height:0;padding-inline:12px}
+ header{flex:none;min-height:48px;padding-block:5px;gap:8px 12px}
+ .brand{font-size:16px}.brand small{display:none}
+ .tab{padding:5px 10px}.btn{padding:5px 9px}
+ .view{min-height:0;padding-bottom:6px}
+ .anim-layout{height:100%;min-height:0;grid-template-columns:minmax(0,1fr) clamp(235px,23vw,300px);grid-template-rows:minmax(0,1fr) auto;gap:7px}
+ .anim-layout>.stage{min-height:0;height:100%}
+ .inspector{min-height:0;overflow:auto}
+ .inspector details:not([open]) summary{padding-block:7px}
+ .inspector summary{padding:8px 10px}.inspector .sec{padding:0 10px 9px;gap:6px}
+ .timeline{padding:6px;gap:5px;max-height:min(190px,29dvh);min-height:0}
+ .tl-bar{gap:4px;flex-wrap:nowrap;overflow-x:auto;min-height:27px}
+ .tl-bar>*{flex-shrink:0}.tl-bar .btn{padding:3px 7px;font-size:12px}
+ .track{min-height:0}.cell .th{height:44px}.cell{padding:2px}.cell .n{font-size:10px}
+ #cells{min-height:63px}#wave{height:25px}
+ .model-layout,.rig-layout{height:100%;min-height:0;grid-template-columns:minmax(0,1fr) clamp(245px,26vw,320px)}
+ .model-stage{height:100%;min-height:0}
+ .model-layout>.panel,.rig-layout>.panel{max-height:100%;overflow:auto}
+ .rig-canvas-wrap{min-height:0;max-height:100%;overflow:auto}
+}
+@media (min-width:980px) and (max-height:740px){
+ header{min-height:42px;padding-block:3px}
+ .timeline{max-height:135px}.cell .th{height:32px}#cells{min-height:47px}
+ #wave{height:18px}.hud{top:5px;left:5px;right:5px}
+ .hud-bottom{bottom:5px;left:5px;right:5px}
+}
+@media (max-width:979px){
+ .shell{padding-inline:10px}
+ .stage{height:min(42dvh,430px);min-height:210px}
+ .ptabs{top:calc(env(safe-area-inset-top,0px) + max(210px,min(42dvh,430px)))}
+ .model-stage{height:min(46dvh,460px);min-height:210px}
+ .timeline{padding:6px}.cell .th{height:42px}#cells{min-height:62px}
+}
+/* User-selectable roomy layout for accessibility. */
+body.roomy-ui .brand small{display:inline}
+@media (min-width:980px){
+ body.roomy-ui .shell{padding-inline:16px}
+ body.roomy-ui header{padding-block:12px}
+ body.roomy-ui .timeline{max-height:none;padding:10px;gap:8px}
+ body.roomy-ui .cell .th{height:62px}
+ body.roomy-ui #cells{min-height:92px}
+ body.roomy-ui #wave{height:44px}
+ body.roomy-ui .anim-layout{gap:12px;grid-template-columns:minmax(0,1fr) 330px}
+ body.roomy-ui .inspector summary{padding:11px 14px}
+ body.roomy-ui .inspector .sec{padding:0 14px 14px;gap:9px}
+}
+
 </style>
 
 <div class="shell">
@@ -267,6 +318,7 @@ select{background:var(--panel-2);border:1px solid var(--line-2);border-radius:6p
       <button class="tab" role="tab" id="t-anim" data-view="anim"><b>4</b>Animate</button>
     </nav>
     <div class="spacer"></div>
+    <button class="btn ghost sm" id="densityToggle" type="button" aria-pressed="true" title="Switch between compact and roomy layouts">Compact view</button>
     <div class="row">
       <label class="btn ghost" for="projIn">Open<span class="lg"> project</span></label>
       <input type="file" id="projIn" accept=".json,application/json" hidden>
@@ -4145,4 +4197,15 @@ applyLayout();
 })();
 </script>
 
+<script>
+(function(){
+ const btn=document.getElementById('densityToggle');
+ const key='gsa-layout-density-v1';
+ let roomy=false;
+ try{roomy=localStorage.getItem(key)==='roomy'}catch(e){}
+ function apply(){document.body.classList.toggle('roomy-ui',roomy);btn.textContent=roomy?'Roomy view':'Compact view';btn.setAttribute('aria-pressed',String(!roomy));btn.title=roomy?'Switch to compact workspace':'Switch to roomy workspace';window.dispatchEvent(new Event('resize'))}
+ btn.addEventListener('click',function(){roomy=!roomy;try{localStorage.setItem(key,roomy?'roomy':'compact')}catch(e){}apply()});
+ apply();
+})();
+</script>
 </html>
