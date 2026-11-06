@@ -348,12 +348,18 @@ body.roomy-ui #v-anim .anim-layout{grid-template-columns:74px clamp(205px,20vw,2
 @media(max-width:1120px){#v-anim .anim-layout{grid-template-columns:58px 190px minmax(0,1fr) 230px}.rail-tool{font-size:9px}header .brand small{display:none}}
 @media(max-width:850px){body{overflow:auto}.shell{height:auto;min-height:100dvh;overflow:visible}#v-anim{overflow:visible}#v-anim .anim-layout{display:grid;grid-template-columns:55px minmax(0,1fr);grid-template-rows:auto minmax(300px,55dvh) 150px auto;min-height:0;height:auto}#v-anim .asset-rail{grid-column:1;grid-row:1 / 5}#v-anim .asset-library{grid-column:2;grid-row:1;max-height:180px}#v-anim .stage{grid-column:2;grid-row:2;position:relative;top:auto;min-height:300px}#v-anim .timeline{grid-column:2;grid-row:3;height:150px;order:initial}#v-anim .inspector{grid-column:2;grid-row:4;max-height:360px;overflow:auto;order:initial}header{flex-wrap:wrap}}
 
+/* Keep the studio editor as the primary workspace; workflow tabs remain available. */
+header .tabs{max-width:380px;overflow-x:auto;scrollbar-width:none}
+header .tab{white-space:nowrap;font-size:12px}
+#v-anim .stage-frame{background:#242b36}
+#v-anim .empty-stage[hidden]{display:none!important}
+@media(min-width:980px){#v-anim .anim-layout{grid-template-rows:minmax(0,1fr) clamp(112px,19dvh,160px)}#v-anim .timeline{height:auto;min-height:0}}
 </style>
 
 <div class="shell">
   <header>
     <div class="brand"><span class="logo-mark">G</span> Graphic Staging <small>ANIMATION STUDIO</small></div>
-    <nav class="tabs" role="tablist" aria-label="Steps">
+    <nav class="tabs" role="tablist" aria-label="Advanced workflow steps">
       <button class="tab" role="tab" id="t-import" data-view="import"><b>1</b>Import</button>
       <button class="tab" role="tab" id="t-model" data-view="model"><b>2</b>Model</button>
       <button class="tab" role="tab" id="t-rig" data-view="rig"><b>3</b>Rig</button>
@@ -3631,22 +3637,27 @@ async function importModel(files) {
     let clayCount = 0;
     r.obj.traverse(o => {
       if (!o.isMesh || !o.material || !o.geometry) return;
-      if (!o.geometry.attributes.normal && o.geometry.attributes.position) {
-        o.geometry.computeVertexNormals();
+      if (!o.geometry.attributes.normal && o.geometry.attributes.position) o.geometry.computeVertexNormals();
+      const colorAttr = o.geometry.attributes.color;
+      let blankVertexColor = false;
+      if (colorAttr && colorAttr.count) {
+        // AI shape models sometimes export all-white vertex colors, which are not useful textures.
+        let min=1, max=0;
+        for (let i=0;i<colorAttr.count;i+=Math.max(1,Math.floor(colorAttr.count/512))) {
+          for(let c=0;c<3;c++){const v=colorAttr.getComponent(i,c);min=Math.min(min,v);max=Math.max(max,v);}
+        }
+        blankVertexColor = min > .89 && max-min < .11;
       }
-      const vertexColors = !!o.geometry.attributes.color;
       const originals = Array.isArray(o.material) ? o.material : [o.material];
       const revised = originals.map(m => {
-        if (!m || vertexColors || m.map || m.emissiveMap || m.vertexColors ||
-            !m.color || m.color.r < .91 || m.color.g < .91 || m.color.b < .91 ||
-            m.isMeshNormalMaterial || m.isMeshDepthMaterial) return m;
+        if (!m || m.map || m.emissiveMap || m.normalMap || m.isMeshDepthMaterial || m.isMeshNormalMaterial) return m;
+        if (colorAttr && !blankVertexColor) return m;
+        const nearWhite = !m.color || (m.color.r > .88 && m.color.g > .88 && m.color.b > .88);
+        if (!nearWhite && !(m.isMeshBasicMaterial && !m.map)) return m;
         const clay = new THREE.MeshStandardMaterial({
-          color: 0xb6c3d3, roughness: .82, metalness: 0,
-          side: m.side, transparent: m.transparent, opacity: m.opacity,
-          alphaTest: m.alphaTest || 0,
-          skinning: !!o.isSkinnedMesh,
-          morphTargets: !!(o.morphTargetInfluences && o.morphTargetInfluences.length),
-          morphNormals: !!(o.geometry.morphAttributes && o.geometry.morphAttributes.normal)
+          color: 0x91a9c2, roughness: .88, metalness: 0,
+          side: THREE.DoubleSide, transparent: !!m.transparent, opacity: m.opacity ?? 1,
+          alphaTest: m.alphaTest || 0, vertexColors: false
         });
         clayCount++;
         return clay;
@@ -3664,12 +3675,15 @@ async function importModel(files) {
     if ((r.ext === 'stl' || r.ext === 'ply')) { const b = measureBox(r.obj), sz = b.getSize(new THREE.Vector3()); if (sz.z > sz.y * 1.15) fix.rotation.x = -Math.PI / 2; }
     EXT.baseRot.copy(fix.rotation);
     placeModel();
+    if (S.bg === '#00b140' || S.bg === '#ffffff') setBg('#242b36');
     applyImportedMeshStyle();
+    requestRender();
     S.modelFiles = r.files;
     $('#animSel').innerHTML = '<option value="-1">None: pose by hand</option>' + r.clips.map((c, i) => `<option value="${i}">${(c.name || 'Animation ' + (i + 1)).replace(/[<&>"]/g, '')} · ${c.duration.toFixed(1)} s</option>`).join('');
     $('#modelInfo').hidden = false; $('#modelText').textContent = describeModel(EXT); $('#modeSeg').hidden = false;
     S.pose.mb = {}; S.pose.ma = { clip: -1, t: 0 };
     drawModelThumb();
+    document.getElementById('emptyStage').hidden = true;
     busy(null);
     toast(EXT.bones.length ? '3D model loaded. Press "Animate this 3D model" to pose it.' : '3D model loaded. It has no skeleton: animate it as a whole, or make pictures for the picture rig to pose it.', 5000);
   } catch (e) { busy(null); console.error(e); toast(e.message || 'That 3D file could not be read.', 7000); }
@@ -4334,8 +4348,6 @@ applyLayout();
  apply();
 })();
 </script>
-</html>
-
 <script>
 (function(){
   const empty=document.getElementById('emptyStage');
@@ -4352,10 +4364,11 @@ applyLayout();
   };
   document.querySelectorAll('[data-asset-tab]').forEach(b=>b.addEventListener('click',()=>chooseTab(b.dataset.assetTab)));
   document.getElementById('quickMeshImport')?.addEventListener('click',()=>document.getElementById('modelIn')?.click());
-  document.getElementById('modelIn')?.addEventListener('change',()=>{empty.hidden=true;});
-  document.getElementById('in-front')?.addEventListener('change',()=>{empty.hidden=true;});
+  // Hide the empty stage only after the model import completes successfully.
   const observer=new MutationObserver(updateEmpty);
   const info=document.getElementById('modelInfo');if(info)observer.observe(info,{attributes:true,attributeFilter:['hidden']});
   updateEmpty();
 })();
 </script>
+</body>
+</html>
