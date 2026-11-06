@@ -255,68 +255,6 @@ select{background:var(--panel-2);border:1px solid var(--line-2);border-radius:6p
   .cell{min-width:52px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-
-/* Compact, viewport-fitted studio layout (UI upgrade) */
-:root{--r:10px;--panel:#1a202b;--panel-2:#252d3a;--line:#303a49}
-html,body{margin:0;min-width:0;width:100%;height:100%;height:100dvh}
-.shell{width:100%;max-width:100%;min-height:0;padding-inline:clamp(8px,1.1vw,16px)}
-header{flex:0 0 auto;min-width:0;padding-block:8px;gap:8px 12px;border-bottom:1px solid var(--line);margin-bottom:8px}
-.brand{font-size:clamp(15px,1.3vw,18px);white-space:nowrap}
-.brand small{font-size:9px}
-.tab{padding:6px 11px}
-.view{min-width:0;padding-bottom:8px}
-.card,.panel,.inspector,.timeline{box-shadow:0 2px 12px rgba(0,0,0,.08)}
-.btn,.tab,.seg button{transition:background .15s ease,border-color .15s ease}
-button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.workspace-toggle{display:none}
-@media (min-width:980px){
-  .shell{height:100dvh;max-height:100dvh;overflow:hidden}
-  .view{overflow:auto;overscroll-behavior:contain}
-  #v-anim{overflow:hidden}
-  .anim-layout{grid-template-columns:minmax(0,1fr) clamp(252px,23vw,320px);grid-template-rows:minmax(180px,1fr) minmax(145px,auto);gap:8px;min-height:0;height:100%}
-  .stage{min-height:0;min-width:0}
-  .inspector{min-height:0;scrollbar-width:thin}
-  .timeline{min-height:0;max-height:clamp(150px,26vh,255px);padding:8px;overflow:hidden}
-  .track{min-height:0;overflow:auto}
-  .tl-bar{gap:4px}
-  .tl-bar .btn{padding:4px 7px;font-size:11px}
-  .model-layout{grid-template-columns:minmax(0,1fr) clamp(260px,24vw,330px);align-items:start;gap:10px}
-  .model-stage{height:clamp(280px,calc(100dvh - 155px),900px);min-height:0}
-  .rig-layout{grid-template-columns:minmax(0,1fr) clamp(260px,24vw,330px);gap:10px}
-  .workspace-toggle{display:inline-flex;align-items:center;gap:6px}
-  body.inspector-collapsed .anim-layout{grid-template-columns:minmax(0,1fr) 0px}
-  body.inspector-collapsed .anim-layout>.inspector{visibility:hidden;pointer-events:none;border:0;padding:0}
-  body.inspector-collapsed .model-layout{grid-template-columns:minmax(0,1fr) clamp(260px,24vw,330px)}
-  .hud{max-width:100%;overflow:hidden}
-}
-@media (min-width:980px) and (max-height:760px){
-  header{padding-block:5px;margin-bottom:5px}
-  .brand small{display:none}
-  .timeline{max-height:180px}
-  .tl-bar{max-height:42px;overflow-x:auto;flex-wrap:nowrap}
-  .tl-bar>*{flex-shrink:0}
-  .model-stage{height:calc(100dvh - 125px)}
-}
-@media (max-width:979px){
-  .shell{min-height:100dvh}
-  .brand{max-width:100%;white-space:normal}
-  .tabs{min-width:0}
-  .tab{min-width:0;padding:7px 6px}
-  .tab b{margin-right:3px}
-  .stage{height:clamp(250px,47dvh,540px)}
-  .model-stage{height:clamp(260px,53dvh,550px)}
-  .timeline{max-width:100%;overflow:hidden}
-  .track{max-width:100%}
-}
-@media (max-width:480px){
-  header>.row .btn,header>.row label{font-size:12px;padding:6px}
-  .brand{font-size:16px}
-  .hud{gap:4px}
-  .hud .chip{font-size:10px;padding:4px 6px}
-  .hud-bottom{left:5px;right:5px;bottom:5px}
-  .views{gap:2px}
-  .views .btn{padding:5px 7px;font-size:11px}
-}
 </style>
 
 <div class="shell">
@@ -329,7 +267,6 @@ button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outli
       <button class="tab" role="tab" id="t-anim" data-view="anim"><b>4</b>Animate</button>
     </nav>
     <div class="spacer"></div>
-    <button type="button" class="btn ghost workspace-toggle" id="workspaceToggle" aria-pressed="false" title="Hide or show animation controls">Hide controls</button>
     <div class="row">
       <label class="btn ghost" for="projIn">Open<span class="lg"> project</span></label>
       <input type="file" id="projIn" accept=".json,application/json" hidden>
@@ -378,6 +315,24 @@ button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outli
       <div class="refbar" id="refBar" hidden><button class="btn sm" id="pickBest" type="button">Use the best full-body picture as the main front</button><span class="note" id="refSummary"></span></div>
       <div class="refgrid" id="refGrid"></div>
     </section>
+    <section class="refs" id="ai3d" aria-label="AI image to 3D">
+ <div class="card-head"><h3>AI image → true 3D</h3><span class="tag">Hosted generation · optional</span></div>
+ <p class="note">Generate a complete textured GLB using a separate Meshy-backed server. The model loads into this app automatically. The backend requires your own Meshy API key and may incur usage charges. Your image is sent to that provider only when you click Generate.</p>
+ <label class="note" for="ai-endpoint">Backend URL (your deployed service)</label>
+ <input id="ai-endpoint" type="url" placeholder="https://your-backend.example.com" style="width:100%;padding:10px;border-radius:8px;background:#121a29;color:#fff;border:1px solid #475569" autocomplete="url">
+ <label class="note" for="ai-image">Image to reconstruct</label>
+ <input id="ai-image" type="file" accept="image/png,image/jpeg,image/webp" style="display:block;width:100%;margin:8px 0 12px">
+ <div class="row"><button type="button" class="btn primary" id="ai-generate">Generate real 3D model</button><button type="button" class="btn" id="ai-cancel" disabled>Stop waiting</button></div>
+ <p class="note" id="ai-status" role="status" aria-live="polite">Choose an image and enter your backend URL to begin.</p>
+ <progress id="ai-progress" max="100" value="0" style="width:100%;display:none"></progress>
+ <p class="note">Generation runs on a paid third-party service, not in GitHub Pages. Cancelling here stops polling, but does not necessarily cancel a provider job or its charges. Generated meshes may be unrigged.</p>
+</section>
+    <section class="refs" id="mesh-first-workflow" aria-label="True 3D workflow">
+  <div class="card-head"><h3>True 3D workflow</h3><span class="tag">Recommended</span></div>
+  <p class="note"><b>Real 360° geometry requires a mesh.</b> Import a GLB, glTF, FBX or OBJ produced by a dedicated image-to-3D generator. This loads the actual front, sides and back instead of stretching a picture into a shell. The picture-rig reconstruction remains available below as a legacy fallback.</p>
+  <div class="row"><label class="btn primary" for="modelIn">Import generated 3D mesh</label><button class="btn sm" type="button" id="mesh-help">How does this work?</button></div>
+  <p class="note" id="mesh-help-text" hidden>Generate a 3D asset using a dedicated image-to-3D service or desktop modeler, export as GLB, then import it here. This app does not generate Meshy-quality geometry locally. A rigged GLB/FBX supports bone posing; an unrigged mesh can be rotated and animated as a whole.</p>
+</section>
     <section class="refs" aria-labelledby="modelTitle">
       <div class="card-head"><h3 id="modelTitle">3D model file</h3><span class="tag">Optional</span></div>
       <p class="note">Already have a 3D character? Import <b>FBX</b>, <b>OBJ</b> (with its .mtl and textures), <b>glTF / GLB</b>, <b>STL</b>, <b>Collada (.dae)</b>, <b>PLY</b> or <b>USD / USDA / USDC / USDZ</b>. Select the model together with its texture files. Models with a skeleton are posed bone by bone, face shapes (blend shapes) move the mouth and eyes, and animations in the file can become frames.</p>
@@ -410,7 +365,7 @@ button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outli
   <!-- MODEL -->
   <section class="view" id="v-model" hidden>
     <h2>Your character in 3D</h2>
-    <p class="lede">The app has generated a depth-based 2.5D model with estimated sides and back. Drag to turn it around and check every side. Fix anything that looks off here, then rig it.</p>
+    <p class="lede">The app has rebuilt your character as a solid model with a front, sides and back. Drag to turn it around and check every side. Fix anything that looks off here, then rig it.</p>
     <div class="model-layout">
       <div class="model-stage" id="modelSlot"></div>
       <aside class="panel">
@@ -2096,6 +2051,7 @@ function applyArtStyle() {
   ART_UNIFORMS.artBands.value = S.gfx.art === 'cartoon' ? 2 : S.gfx.bands;
   ART_UNIFORMS.artInk.value = mode && S.gfx.outline ? S.gfx.ink : 0;
   refreshArtMaterials();
+  applyImportedMeshStyle();
   saveGfx(); requestRender();
 }
 function applyShading() { const v = S.gfx.shade; amb.intensity = 1 - .45 * v; keyLight.intensity = .52 * v; requestRender(); }
@@ -2365,7 +2321,7 @@ function sampleField(F, X, Y, back) {
   const x = clamp(X / F.ds, 0, F.W - 1.001), y = clamp(Y / F.ds, 0, F.H - 1.001), x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0, p = y0 * F.W + x0, Z = back ? F.Zb : F.Z;
   return (Z[p] * (1 - fx) + Z[p + 1] * fx) * (1 - fy) + (Z[p + F.W] * (1 - fx) + Z[p + F.W + 1] * fx) * fy;
 }
-function partGeometry(cr, F, k, segs, depth, capMask, back, face, partName = "") {
+function partGeometry(cr, F, k, segs, depth, capMask, back, face) {
   const Wc = cr.c.width, Hc = cr.c.height, a = cr.c.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, Wc, Hc).data;
   const ins = new Uint8Array(Wc * Hc); for (let p = 0; p < Wc * Hc; p++) ins[p] = a[p * 4 + 3] > 100 ? 1 : 0;
   const Din = chamfer(ins, Wc, Hc, 1), Dout = chamfer(ins, Wc, Hc, 0, 40), SD = new Float32Array(Wc * Hc);
@@ -2393,42 +2349,6 @@ function partGeometry(cr, F, k, segs, depth, capMask, back, face, partName = "")
     let hwMax = 1; for (let y = 0; y < Hc; y++) if (rl[y] >= 0) hwMax = Math.max(hwMax, (rr[y] - rl[y]) / 2);
     HP = { rl, rr, ct, cb, hwMax, p: back ? 2.3 : 3.2, D: hwMax * (back ? .88 : .6) / cr.s };
   }
-  // Character-aware volume: cross sections are measured from each isolated body-part mask.
-  // This avoids projecting facial features or jersey artwork into the geometry itself.
-  const sectionL = new Float32Array(Hc).fill(Wc), sectionR = new Float32Array(Hc).fill(-1);
-  for (let y = 0; y < Hc; y++) for (let x = 0; x < Wc; x++) if (ins[y * Wc + x]) {
-    sectionL[y] = Math.min(sectionL[y], x); sectionR[y] = Math.max(sectionR[y], x);
-  }
-  // Smooth silhouettes across adjacent rows to prevent scanline bumps.
-  const smoothSections = (v, fallback) => {
-    const o = new Float32Array(Hc);
-    for (let y = 0; y < Hc; y++) {
-      let sum = 0, n = 0;
-      for (let yy = Math.max(0, y - 3); yy <= Math.min(Hc - 1, y + 3); yy++)
-        if (sectionR[yy] >= sectionL[yy]) { sum += v[yy]; n++; }
-      o[y] = n ? sum / n : fallback;
-    }
-    return o;
-  };
-  const rowLeft = smoothSections(sectionL, 0), rowRight = smoothSections(sectionR, Wc - 1);
-  const semanticVolume = (cx, cy, isBack) => {
-    const y = clamp(Math.round(cy), 0, Hc - 1), left = rowLeft[y], right = rowRight[y];
-    const half = Math.max(1, (right - left) * .5), u = clamp((cx - (left + right) * .5) / half, -1, 1);
-    const t = clamp(cy / Hc, 0, 1);
-    // Superellipse gives a broad face and smooth, rounded helmet/torso/limb edges.
-    const power = partName === 'head' ? 2.25 : partName === 'torso' ? 2.8 : partName.startsWith('foot') ? 3.2 : 2.25;
-    const cross = Math.pow(Math.max(0, 1 - Math.pow(Math.abs(u), power)), 1 / power);
-    let ratio = .6;
-    if (partName === 'head') ratio = isBack ? .91 : .67;
-    else if (partName === 'torso') {
-      const belly = Math.exp(-Math.pow((t - .65) / .24, 2));
-      ratio = isBack ? .58 : .59 + .27 * belly;
-    } else if (partName.startsWith('foot')) ratio = isBack ? .48 : 1.12;
-    else if (partName.startsWith('hand')) ratio = .4;
-    else if (partName.startsWith('shin')) ratio = isBack ? .66 : .5;
-    else if (partName.startsWith('thigh')) ratio = .69;
-    return half / cr.s * ratio * cross;
-  };
   const EARS = HP ? earPieces() : [];
   const fProf = (t, pw) => { t = Math.min(1, Math.abs(t)); return Math.pow(Math.max(0, 1 - Math.pow(t, pw)), 1 / pw); };
   const wW = cr.cw * k, hW = cr.ch * k, asp = wW / hW;
@@ -2457,14 +2377,6 @@ function partGeometry(cr, F, k, segs, depth, capMask, back, face, partName = "")
       } else base = 0;
       // ears: thin, from a little way out from where they join the head
       if (EARS.length) { let w = 0; for (const e of EARS) { const gg = e.gAt(X, Y); if (gg >= 0) { const t = clamp(gg / (e.len * .3), 0, 1); w = Math.max(w, t * t * (3 - 2 * t)); } } if (w > 0) base = base * (1 - w) + Math.min(base, HP.D * .17) * w; }
-    }
-    // Use semantic cross-sections on stylized parts, preserving the original
-    // distance-field closure at the silhouette and at joints.
-    if (partName && S.shape !== 'human') {
-      const semantic = semanticVolume(cxp, cyp, back);
-      const inside = clamp(sd / Math.max(1, cellPx * .85), 0, 1);
-      const blend = inside * inside * (3 - 2 * inside);
-      base = base * (1 - blend) + semantic * blend;
     }
     let zz = Math.min(base, lim);
     // the back half only dips a little past the outline: deeper, its edge would poke out in front of the front's outline
@@ -2747,9 +2659,7 @@ function buildModelRaw() {
     const capMask = capR ? addCap(cr, piv, capR) : null;
     let fCanvas = cr.c;
     if (p.n === 'head') { M.headCrop = cr; M.headBase = buildHeadBase(cr); M.headCanvas = mk(cr.c.width, cr.c.height); M.headCanvas.getContext('2d').drawImage(M.headBase, 0, 0); fCanvas = M.headCanvas; }
-    let bCanvas = !back && p.n === 'head' ? hairBack(cr.c, cr.s)
-      : S.backStyle === 'shade' ? backFromFront(cr.c, null, cr.s)
-      : cleanBack(cr.c, cr.s);
+    let bCanvas = p.n === 'head' && !back ? hairBack(cr.c, cr.s) : S.backStyle === 'shade' || p.n === 'head' ? backFromFront(cr.c, null, cr.s) : cleanBack(cr.c, cr.s);
     if (back) { const bc = extractCrop(segB.parts[p.n], A, B, g, maxS).c, bx = bc.getContext('2d'); bx.globalCompositeOperation = 'destination-in'; bx.drawImage(cr.c, 0, 0); bCanvas.getContext('2d').drawImage(bc, 0, 0); }
     const tF = makeTex(fCanvas), tB = makeTex(bCanvas);
     const inset = ((M.outline || 0) + 3) * cr.s, tSF = sideTex(p.n === 'head' ? M.headBase : cr.c, inset), tSB = sideTex(bCanvas, inset);
@@ -2760,13 +2670,13 @@ function buildModelRaw() {
     grp.position.set(wp.x - wpp.x, wp.y - wpp.y, 0); M.groups[p.parent].add(grp); M.groups[p.n] = grp;
     const mid = (cr.L + g.padB - g.padA) / 2, cImg = { x: A.x + cr.v.x * mid, y: A.y + cr.v.y * mid }, wc = W(cImg);
     const holder = new THREE.Group(); holder.position.set(wc.x - wp.x, wc.y - wp.y, 0); holder.rotation.z = Math.atan2(cr.v.x, cr.v.y); grp.add(holder);
-    const pd = depth * (p.n === 'head' ? (S.widths.hdepth ?? 1) : p.n.startsWith('foot') ? 1.45 : 1), hf = p.n === 'head' && faceHead(), { geo, zMax } = partGeometry(cr, F, k, segs, pd, capMask, false, hf, p.n), geoB = partGeometry(cr, F, k, segs, pd, capMask, true, hf, p.n).geo;
+    const pd = depth * (p.n === 'head' ? (S.widths.hdepth ?? 1) : 1), hf = p.n === 'head' && faceHead(), { geo, zMax } = partGeometry(cr, F, k, segs, pd, capMask, false, hf), geoB = S.shape === 'human' || hf ? partGeometry(cr, F, k, segs, pd, capMask, true, hf).geo : geo;
     const tag = (m, isFront) => { m.userData.holder = holder; m.userData.part = p.n; m.userData.canvas = fCanvas === M.headCanvas && isFront ? M.headCanvas : cr.c; m.userData.front = isFront; M.meshes.push(m); return m; };
     holder.add(tag(new THREE.SkinnedMesh(geo, shellMaterial(tF, tSF)), true));
     const flip = new THREE.Group(); flip.scale.z = -1; holder.add(flip);
     flip.add(tag(new THREE.SkinnedMesh(geoB, shellMaterial(tB, tSB)), false));
-    // a narrow colour-matched edge band hides the gap between the two shell surfaces
-    { const rg = seamRibbon(cr, k, Math.max(.001, RIM * geo.userData.cellPx * .10 * k * pd)); if (rg) { const rm = shellMaterial(tSF, tSF); rm.side = THREE.DoubleSide; holder.add(tag(new THREE.SkinnedMesh(rg, rm), false)); } }
+    // a thin band standing on the outline closes the seam where the front and back halves meet
+    { const rg = seamRibbon(cr, k, RIM * geo.userData.cellPx * .6 * k * pd); if (rg) { const rm = shellMaterial(tF, tSF); rm.side = THREE.DoubleSide; holder.add(tag(new THREE.SkinnedMesh(rg, rm), false)); } }
     grp.userData.depth = zMax * 2;
     // a ball inside the joint: hidden inside the limb at rest, it fills the gap when the limb bends in any direction
     if (capR) {
@@ -3534,6 +3444,42 @@ function renderModelView(yawDeg, w, h, margin = 1.06) {
   renderNow();
   return out;
 }
+// Non-destructive imported-mesh art styles. Original material properties are restored on demand.
+function applyImportedMeshStyle() {
+  if (!EXT) return;
+  const style = S.gfx.art || 'original';
+  EXT.obj.traverse(o => {
+    if (!o.isMesh || !o.material) return;
+    if (!o.userData.gsaOriginalMaterials) o.userData.gsaOriginalMaterials =
+      (Array.isArray(o.material) ? o.material : [o.material]).map(m => m);
+    const originals = o.userData.gsaOriginalMaterials;
+    if (o.userData.gsaStyleMaterials) o.userData.gsaStyleMaterials.forEach(m => m.dispose());
+    o.userData.gsaStyleMaterials = [];
+    if (style === 'original') {
+      o.material = Array.isArray(o.material) ? originals : originals[0];
+      return;
+    }
+    const transformed = originals.map(m => {
+      // Toon material supports texture maps, skinning, morphs and discrete light bands.
+      const c = m.color ? m.color.clone() : new THREE.Color(0xffffff);
+      const t = new THREE.MeshToonMaterial({
+        color: c, map: m.map || null, transparent: m.transparent || false,
+        opacity: m.opacity ?? 1, alphaTest: m.alphaTest || 0,
+        side: m.side, skinning: !!o.isSkinnedMesh,
+        morphTargets: !!(o.morphTargetInfluences && o.morphTargetInfluences.length),
+        morphNormals: !!(o.geometry && o.geometry.morphAttributes && o.geometry.morphAttributes.normal)
+      });
+      if (style === 'flat') { t.color.multiplyScalar(1.12); t.flatShading = true; }
+      if (style === 'cartoon') { t.color.multiplyScalar(1.07); t.flatShading = true; }
+      if (style === 'anime') { t.color.multiplyScalar(1.02); }
+      t.needsUpdate = true;
+      o.userData.gsaStyleMaterials.push(t);
+      return t;
+    });
+    o.material = transformed.length > 1 ? transformed : transformed[0];
+  });
+  requestRender();
+}
 async function importModel(files) {
   busy('Reading the 3D model…'); await tick();
   try {
@@ -3551,6 +3497,7 @@ async function importModel(files) {
     if ((r.ext === 'stl' || r.ext === 'ply')) { const b = measureBox(r.obj), sz = b.getSize(new THREE.Vector3()); if (sz.z > sz.y * 1.15) fix.rotation.x = -Math.PI / 2; }
     EXT.baseRot.copy(fix.rotation);
     placeModel();
+    applyImportedMeshStyle();
     S.modelFiles = r.files;
     $('#animSel').innerHTML = '<option value="-1">None: pose by hand</option>' + r.clips.map((c, i) => `<option value="${i}">${(c.name || 'Animation ' + (i + 1)).replace(/[<&>"]/g, '')} · ${c.duration.toFixed(1)} s</option>`).join('');
     $('#modelInfo').hidden = false; $('#modelText').textContent = describeModel(EXT); $('#modeSeg').hidden = false;
@@ -3562,7 +3509,7 @@ async function importModel(files) {
 }
 function removeModel(quiet) {
   if (!EXT) return;
-  turntable.remove(EXT.wrap); EXT.wrap.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { if (m.map) m.map.dispose(); m.dispose(); }); });
+  turntable.remove(EXT.wrap); EXT.wrap.traverse(o => { if (o.geometry) o.geometry.dispose(); const mats = [...(o.userData.gsaOriginalMaterials || []), ...(o.userData.gsaStyleMaterials || []), ...(o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : [])]; [...new Set(mats)].forEach(m => { if (m && m.dispose) { if (m.map) m.map.dispose(); m.dispose(); } }); });
   EXT.urls.forEach(u => URL.revokeObjectURL(u)); EXT = null; S.modelFiles = null;
   setModelMode(false); $('#modelInfo').hidden = true; $('#modeSeg').hidden = true;
   if (!quiet) toast('3D model removed');
@@ -3581,6 +3528,80 @@ async function modelToPictures() {
   toast('Front, back and side pictures made from the model. Check the joints on the Rig step, then animate the picture rig.', 6000);
   showView('rig');
 }
+
+/* ---- optional image-to-3D server workflow (never stores provider credentials) ---- */
+let aiRun = null;
+const aiStatus = document.getElementById('ai-status');
+const aiProgress = document.getElementById('ai-progress');
+function aiMessage(message, progress) {
+  aiStatus.textContent = message;
+  aiProgress.style.display = progress == null ? 'none' : 'block';
+  if (progress != null) aiProgress.value = Math.min(100, Math.max(0, progress));
+}
+const aiEndpointInput = document.getElementById('ai-endpoint');
+aiEndpointInput.value = localStorage.getItem('gsa_ai_endpoint') || '';
+aiEndpointInput.addEventListener('change', () => localStorage.setItem('gsa_ai_endpoint', aiEndpointInput.value.trim()));
+const aiWait = ms => new Promise(resolve => setTimeout(resolve, ms));
+function aiBackend() {
+  const raw = aiEndpointInput.value.trim().replace(/\/+$/, '');
+  const u = new URL(raw);
+  if (u.protocol !== 'https:' && !(u.protocol === 'http:' && ['localhost','127.0.0.1'].includes(u.hostname))) throw Error('Use an HTTPS backend URL (or localhost for development).');
+  return u.origin + u.pathname.replace(/\/+$/, '');
+}
+async function aiFetch(url, opts = {}) {
+  const r = await fetch(url, { ...opts, cache: 'no-store' });
+  if (!r.ok) {
+    let message = `Backend error ${r.status}`;
+    try { const data = await r.json(); message = data.error || message; } catch (_) {}
+    throw Error(message);
+  }
+  return r;
+}
+document.getElementById('ai-cancel').onclick = () => {
+  if (aiRun) { aiRun.cancelled = true; aiRun = null; }
+  document.getElementById('ai-generate').disabled = false;
+  document.getElementById('ai-cancel').disabled = true;
+  aiMessage('Stopped checking. The provider job may still be running and incur charges.');
+};
+document.getElementById('ai-generate').onclick = async () => {
+  if (aiRun) return;
+  const file = document.getElementById('ai-image').files[0];
+  if (!file) return aiMessage('Select a PNG, JPEG or WebP image first.');
+  if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size > 8 * 1024 * 1024) return aiMessage('Image must be PNG, JPEG or WebP and under 8 MB.');
+  let base;
+  try { base = aiBackend(); } catch(e) { return aiMessage(e.message); }
+  const run = { cancelled:false }; aiRun = run;
+  document.getElementById('ai-generate').disabled = true;
+  document.getElementById('ai-cancel').disabled = false;
+  try {
+    aiMessage('Uploading image to your backend…', 2);
+    const form = new FormData(); form.append('image', file, file.name);
+    const job = await (await aiFetch(base + '/api/generate', { method:'POST', body:form })).json();
+    if (!job.id) throw Error('Backend did not return a job ID.');
+    while (!run.cancelled) {
+      await aiWait(5000);
+      if (run.cancelled) break;
+      const state = await (await aiFetch(base + '/api/jobs/' + encodeURIComponent(job.id))).json();
+      aiMessage('Generating: ' + (state.status || 'processing') + '…', state.progress ?? 5);
+      if (state.status === 'SUCCEEDED') {
+        aiMessage('Downloading textured GLB…', 99);
+        const blob = await (await aiFetch(base + '/api/jobs/' + encodeURIComponent(job.id) + '/model')).blob();
+        if (run.cancelled) break;
+        await importModel([new File([blob], 'generated-character.glb', {type:'model/gltf-binary'})]);
+        if (EXT) {
+          setModelMode(true);
+          showView('anim');
+          aiMessage('Complete! Real 3D model imported. Rotate to inspect its back. Unrigged models can animate as a whole.', 100);
+        } else throw Error('Generated file could not be imported.');
+        break;
+      }
+      if (['FAILED','EXPIRED','CANCELED'].includes(state.status)) throw Error(state.error || '3D generation failed.');
+    }
+  } catch(e) { if (!run.cancelled) aiMessage('Generation error: ' + e.message); }
+  finally { if (aiRun === run) aiRun = null; document.getElementById('ai-generate').disabled = false; document.getElementById('ai-cancel').disabled = true; }
+};
+
+$('#mesh-help').onclick = () => { const el = $('#mesh-help-text'); el.hidden = !el.hidden; };
 $('#modelIn').addEventListener('change', e => { const f = [...e.target.files]; e.target.value = ''; if (f.length) importModel(f); });
 { const dz = $('#modelDrop'); dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); }); dz.addEventListener('dragleave', () => dz.classList.remove('over')); dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); if (e.dataTransfer.files.length) importModel(e.dataTransfer.files); }); }
 $('#modelAnimate').onclick = () => { setModelMode(true); showView('anim'); toast(EXT && EXT.bones.length ? 'Drag a body part, or pick a bone in the Pose list, to pose the model.' : 'Use "Whole model" in the Pose list to tilt and turn it.', 4500); };
@@ -3931,18 +3952,6 @@ bindRange('c-y', v => v, v => { S.face.cY = v / 100; closeChanged(); });
 $('#toAnim').onclick = () => showView('anim');
 new ResizeObserver(() => { if (S.view === 'rig') { drawRig(); drawFace(); drawClose(); } }).observe(rc.parentElement);
 
-/* Workspace focus toggle: hide the inspector to maximize canvas area on desktop. */
-const workspaceToggle = document.getElementById('workspaceToggle');
-if (workspaceToggle) {
-  workspaceToggle.addEventListener('click', () => {
-    const collapsed = document.body.classList.toggle('inspector-collapsed');
-    workspaceToggle.setAttribute('aria-pressed', String(collapsed));
-    workspaceToggle.textContent = collapsed ? 'Show controls' : 'Hide controls';
-    workspaceToggle.setAttribute('aria-label', collapsed ? 'Show animation controls' : 'Hide animation controls');
-    requestAnimationFrame(() => { if (typeof layoutStage === 'function') layoutStage(); });
-  });
-}
-
 /* ---------- phone & tablet layout ---------- */
 const mq = window.matchMedia('(max-width: 979px)');
 const insp = $('.inspector'), dets = $$('.inspector > details'), PNAMES = ['Pose', 'Face', 'Camera', 'Background', 'Audio', 'Graphics'];
@@ -3994,7 +4003,7 @@ function syncModelUI() {
   const others = (S.refs || []).filter(r => r.kind === 'pose').length; if (others) src.push(others + ' other reference picture' + (others > 1 ? 's' : ''));
   const fit = S.sideFit && S.shape === 'human' && sideRef() ? ` The body and head were fitted to the side view: the side outline is now within ${(S.sideFit.after * 100).toFixed(1)}% of the figure's height (it started at ${(S.sideFit.before * 100).toFixed(1)}%).` : '';
   $('#mSources').textContent = 'Rebuilt from ' + (src.length > 1 ? src.slice(0, -1).join(', ') + ' and ' + src[src.length - 1] : src[0]) + ', with ' + (S.shape === 'human' ? 'human anatomy' : 'rounded cartoon') + ' shapes. Front and back meet at the outline, and the sides are ' + (SIDE_U.sideOn.value ? 'painted from your side view.' : 'filled with the edge colours.') + fit;
-  $('#mBackNote').textContent = S.cut.back ? 'Your back picture covers the back. This setting only fills spots the back picture does not reach.' : 'No back picture was added. The app estimates back colours and volume; upload a rear reference for accurate details.';
+  $('#mBackNote').textContent = S.cut.back ? 'Your back picture covers the back. This setting only fills spots the back picture does not reach.' : 'No back picture was added, so the app makes up the back from the front.';
 }
 // the model seen straight from the front, compared with the cut-out picture
 function modelCheck() {
