@@ -34,3 +34,9 @@ It's a single web page, so there's nothing to install or build.
 - A modern browser with WebGL (Chrome, Edge, Firefox or Safari, on desktop or mobile).
 - An internet connection the first time the page loads. three.js, JSZip and the fonts come from public CDNs (cdnjs, jsDelivr and Google Fonts).
 - A graphics-card setting in the app lets you pick the high-performance GPU on computers that have two.
+
+## Browser-only art-style rendering upgrade
+
+Open **Graphics & speed** in the animation inspector to choose **Original**, **Anime**, **Cartoon**, or **2D look**. Anime and cartoon modes posterize the light response while preserving imported image texture detail, transparency, existing model shape and rig. Adjust **Anime ink edge shading**, **Outline strength**, and **Cel shading bands** to taste. Settings persist in browser local storage.
+
+This is a shader-based stylization of the current geometry. It does **not** infer a complete 3D model from a single image or create a 2D illustration. No paid AI API is required. The page still needs access to its existing Three.js CDN resources on first load.

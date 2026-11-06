@@ -534,6 +534,11 @@ select{background:var(--panel-2);border:1px solid var(--line-2);border-radius:6p
             <label class="field" for="g-quality">Viewport sharpness<select id="g-quality"><option value="high">High</option><option value="balanced">Balanced</option><option value="fast">Fast</option></select></label>
             <label class="field" for="g-detail">Model detail<select id="g-detail"><option value="low">Low · fastest</option><option value="medium">Medium</option><option value="high">High · smoothest</option></select></label>
             <label class="check"><input type="checkbox" id="g-aa" checked> Smooth edges (antialiasing)</label>
+            <label class="field" for="g-art">Art style<select id="g-art"><option value="original">Original · textured 3D</option><option value="anime">Anime · cel shaded</option><option value="cartoon">Cartoon · bold shading</option><option value="flat">2D look · flat colors</option></select></label>
+            <label class="check"><input type="checkbox" id="g-outline"> Anime ink edge shading</label>
+            <div class="ctl"><span>Outline strength</span><input type="range" id="g-ink" min="0" max="100" value="55"><output></output></div>
+            <div class="ctl"><span>Cel shading bands</span><input type="range" id="g-bands" min="2" max="6" step="1" value="3"><output></output></div>
+            <p class="note">Styles change the appearance of the existing 3D mesh, not its shape. Works offline after the app and Three.js have loaded. The 2D look is a flat-shaded 3D model, not a generated drawing.</p>
             <div class="ctl"><span>3D shading</span><input type="range" id="g-shade" min="0" max="100" value="60"><output></output></div>
             <p class="note">Web pages can't pick a graphics card by name. High performance asks for the dedicated GPU on computers that have two. To force a card for the whole browser, choose it for your browser in your operating system's graphics settings.</p>
           </div>
@@ -1963,7 +1968,7 @@ function drawHead(e, force) {
 /* ---------- 3D ---------- */
 const stageFrame = $('#stageFrame');
 const COARSE = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
-const GFX_DEF = { power: 'high-performance', quality: COARSE ? 'fast' : 'balanced', detail: COARSE ? 'low' : 'medium', aa: !COARSE, shade: .6 };
+const GFX_DEF = { power: 'high-performance', quality: COARSE ? 'fast' : 'balanced', detail: COARSE ? 'low' : 'medium', aa: !COARSE, shade: .6, art: 'original', outline: true, ink: .55, bands: 3 };
 S.gfx = (() => { try { return { ...GFX_DEF, ...JSON.parse(localStorage.getItem('rigstudio.gfx') || '{}') }; } catch (e) { return { ...GFX_DEF }; } })();
 const saveGfx = () => { try { localStorage.setItem('rigstudio.gfx', JSON.stringify(S.gfx)); } catch (e) { } };
 const pixelRatio = () => { const d = window.devicePixelRatio || 1; return S.gfx.quality === 'high' ? Math.min(d, 2) : S.gfx.quality === 'fast' ? Math.min(d, 1) * .75 : Math.min(d, 1.25); };
@@ -1978,6 +1983,58 @@ const marker = new THREE.Mesh(new THREE.CircleGeometry(.028, 24), new THREE.Mesh
 marker.renderOrder = 999;
 let needRender = true;
 const requestRender = () => { needRender = true; };
+/* Browser-only anime / cartoon shader. Keep the original material and texture maps.
+   Lighting is posterized, not the artwork's pixel colors, so eyes and clothing remain detailed. */
+const ART_UNIFORMS = { artMode: { value: 0 }, artBands: { value: 3 }, artInk: { value: 0 } };
+const artMaterials = new WeakSet();
+function prepareArtMaterial(m) {
+  if (!m || artMaterials.has(m) || !(m.isMeshPhongMaterial || m.isMeshLambertMaterial || m.isMeshStandardMaterial || m.isMeshPhysicalMaterial)) return;
+  artMaterials.add(m);
+  const oldCompile = m.onBeforeCompile;
+  const oldKey = m.customProgramCacheKey ? m.customProgramCacheKey.bind(m) : () => '';
+  m.onBeforeCompile = shader => {
+    if (oldCompile) oldCompile.call(m, shader);
+    Object.assign(shader.uniforms, ART_UNIFORMS);
+    shader.fragmentShader = shader.fragmentShader.replace('#include <common>', `#include <common>
+uniform float artMode;
+uniform float artBands;
+uniform float artInk;`);
+    // Apply to the light response, leaving the original texture, UVs, alpha and rig intact.
+    shader.fragmentShader = shader.fragmentShader.replace('#include <output_fragment>', `
+      if (artMode > 0.5) {
+        float lum = dot(outgoingLight, vec3(0.2126, 0.7152, 0.0722));
+        float baseLum = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+        float illumination = clamp(lum / max(baseLum, 0.075), 0.0, 2.0);
+        float steps = max(2.0, artBands);
+        float stepped = floor(clamp(illumination, 0.0, 1.999) * steps + 0.35) / steps;
+        if (artMode > 2.5) stepped = 1.0;
+        outgoingLight *= stepped / max(illumination, 0.05);
+        // View-space normal is available for lit materials; a silhouette-like rim.
+        vec3 artNormal = normalize(normal);
+        vec3 artView = normalize(vViewPosition);
+        float edge = 1.0 - abs(dot(artNormal, artView));
+        float ink = smoothstep(0.68, 0.94, edge) * artInk;
+        outgoingLight = mix(outgoingLight, outgoingLight * 0.10, ink);
+      }
+      #include <output_fragment>`);
+  };
+  m.customProgramCacheKey = () => oldKey() + '|gsa-art-v1';
+  m.needsUpdate = true;
+}
+function refreshArtMaterials() {
+  scene.traverse(obj => {
+    if (!obj.material) return;
+    (Array.isArray(obj.material) ? obj.material : [obj.material]).forEach(prepareArtMaterial);
+  });
+}
+function applyArtStyle() {
+  const mode = { original: 0, anime: 1, cartoon: 2, flat: 3 }[S.gfx.art] ?? 0;
+  ART_UNIFORMS.artMode.value = mode;
+  ART_UNIFORMS.artBands.value = S.gfx.art === 'cartoon' ? 2 : S.gfx.bands;
+  ART_UNIFORMS.artInk.value = mode && S.gfx.outline ? S.gfx.ink : 0;
+  refreshArtMaterials();
+  saveGfx(); requestRender();
+}
 function applyShading() { const v = S.gfx.shade; amb.intensity = 1 - .45 * v; keyLight.intensity = .52 * v; requestRender(); }
 function createRenderer() {
   if (renderer) { renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove(); renderer = null; }
@@ -2680,7 +2737,7 @@ function updateMarker() {
   requestRender();
 }
 function bgClear() { if (!renderer) return; if (S.bg === 'transparent') renderer.setClearColor(0x000000, 0); else renderer.setClearColor(S.bg, 1); }
-function renderNow() { if (!renderer) return; bgClear(); renderer.render(scene, camera); needRender = false; }
+function renderNow() { if (!renderer) return; refreshArtMaterials(); bgClear(); renderer.render(scene, camera); needRender = false; }
 (function loop() { if (needRender) renderNow(); requestAnimationFrame(loop); })();
 
 function layoutStage() {
@@ -3749,7 +3806,12 @@ $('#cleanDone').onclick = () => {
 window.addEventListener('resize', () => { if (!$('#cleanModal').hidden) drawClean(); });
 
 /* ---------- graphics settings ---------- */
-function syncGfxUI() { $('#g-power').value = S.gfx.power; $('#g-quality').value = S.gfx.quality; $('#g-detail').value = S.gfx.detail; $('#g-aa').checked = S.gfx.aa; setRange('g-shade', S.gfx.shade * 100); }
+$('#g-art').addEventListener('change', e => { S.gfx.art = e.target.value; applyArtStyle(); toast('Art style: ' + e.target.selectedOptions[0].text); });
+$('#g-outline').addEventListener('change', e => { S.gfx.outline = e.target.checked; applyArtStyle(); });
+bindRange('g-ink', v => v + '%', v => { S.gfx.ink = v / 100; applyArtStyle(); });
+bindRange('g-bands', v => v + ' bands', v => { S.gfx.bands = v; applyArtStyle(); });
+
+function syncGfxUI() { $('#g-power').value = S.gfx.power; $('#g-quality').value = S.gfx.quality; $('#g-detail').value = S.gfx.detail; $('#g-aa').checked = S.gfx.aa; setRange('g-shade', S.gfx.shade * 100); $('#g-art').value = S.gfx.art || 'original'; $('#g-outline').checked = S.gfx.outline !== false; setRange('g-ink', (S.gfx.ink ?? .55) * 100); setRange('g-bands', S.gfx.bands || 3); }
 $('#g-power').addEventListener('change', e => { S.gfx.power = e.target.value; saveGfx(); createRenderer(); requestRender(); toast('Now rendering on: ' + (M.gpu || 'unknown'), 3500); });
 $('#g-aa').addEventListener('change', e => { S.gfx.aa = e.target.checked; saveGfx(); createRenderer(); });
 $('#g-quality').addEventListener('change', e => { S.gfx.quality = e.target.value; saveGfx(); if (renderer) renderer.setPixelRatio(pixelRatio()); layoutStage(); });
@@ -3945,7 +4007,7 @@ function loadSample() {
 }
 
 /* ---------- boot ---------- */
-syncGfxUI(); createRenderer(); applyShading();
+syncGfxUI(); createRenderer(); applyShading(); applyArtStyle();
 renderSwatches(); setBg(S.bg); selectPart('uArmR'); updateAudioUI();
 loadSample();
 showView('anim');
