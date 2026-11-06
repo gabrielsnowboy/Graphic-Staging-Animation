@@ -316,16 +316,16 @@ select{background:var(--panel-2);border:1px solid var(--line-2);border-radius:6p
       <div class="refgrid" id="refGrid"></div>
     </section>
     <section class="refs" id="ai3d" aria-label="AI image to 3D">
- <div class="card-head"><h3>AI image → true 3D</h3><span class="tag">Hosted generation · optional</span></div>
- <p class="note">Generate a complete textured GLB using a separate Meshy-backed server. The model loads into this app automatically. The backend requires your own Meshy API key and may incur usage charges. Your image is sent to that provider only when you click Generate.</p>
- <label class="note" for="ai-endpoint">Backend URL (your deployed service)</label>
- <input id="ai-endpoint" type="url" placeholder="https://your-backend.example.com" style="width:100%;padding:10px;border-radius:8px;background:#121a29;color:#fff;border:1px solid #475569" autocomplete="url">
+ <div class="card-head"><h3>Local AI image → true 3D</h3><span class="tag">Free · runs on your computer</span></div>
+ <p class="note">Generate a real GLB with Hunyuan3D running on your computer. First start the Hunyuan API and the included local bridge. The image stays on your computer; no paid Meshy API key is required. Hunyuan may generate an untextured mesh depending on your setup.</p>
+ <label class="note" for="ai-endpoint">Local bridge URL</label>
+ <input id="ai-endpoint" type="url" placeholder="http://127.0.0.1:8787" style="width:100%;padding:10px;border-radius:8px;background:#121a29;color:#fff;border:1px solid #475569" autocomplete="url">
  <label class="note" for="ai-image">Image to reconstruct</label>
  <input id="ai-image" type="file" accept="image/png,image/jpeg,image/webp" style="display:block;width:100%;margin:8px 0 12px">
  <div class="row"><button type="button" class="btn primary" id="ai-generate">Generate real 3D model</button><button type="button" class="btn" id="ai-cancel" disabled>Stop waiting</button></div>
- <p class="note" id="ai-status" role="status" aria-live="polite">Choose an image and enter your backend URL to begin.</p>
+ <p class="note" id="ai-status" role="status" aria-live="polite">Start Hunyuan3D and the local bridge, then choose an image.</p>
  <progress id="ai-progress" max="100" value="0" style="width:100%;display:none"></progress>
- <p class="note">Generation runs on a paid third-party service, not in GitHub Pages. Cancelling here stops polling, but does not necessarily cancel a provider job or its charges. Generated meshes may be unrigged.</p>
+ <p class="note">The model runs locally on your computer, not on GitHub Pages. Cancelling stops checking but does not stop a generation already running. Generated meshes are usually unrigged.</p>
 </section>
     <section class="refs" id="mesh-first-workflow" aria-label="True 3D workflow">
   <div class="card-head"><h3>True 3D workflow</h3><span class="tag">Recommended</span></div>
@@ -3539,7 +3539,7 @@ function aiMessage(message, progress) {
   if (progress != null) aiProgress.value = Math.min(100, Math.max(0, progress));
 }
 const aiEndpointInput = document.getElementById('ai-endpoint');
-aiEndpointInput.value = localStorage.getItem('gsa_ai_endpoint') || '';
+aiEndpointInput.value = localStorage.getItem('gsa_ai_endpoint') || 'http://127.0.0.1:8787';
 aiEndpointInput.addEventListener('change', () => localStorage.setItem('gsa_ai_endpoint', aiEndpointInput.value.trim()));
 const aiWait = ms => new Promise(resolve => setTimeout(resolve, ms));
 function aiBackend() {
@@ -3561,7 +3561,7 @@ document.getElementById('ai-cancel').onclick = () => {
   if (aiRun) { aiRun.cancelled = true; aiRun = null; }
   document.getElementById('ai-generate').disabled = false;
   document.getElementById('ai-cancel').disabled = true;
-  aiMessage('Stopped checking. The provider job may still be running and incur charges.');
+  aiMessage('Stopped checking. Local generation may still be running.');
 };
 document.getElementById('ai-generate').onclick = async () => {
   if (aiRun) return;
@@ -3584,14 +3584,14 @@ document.getElementById('ai-generate').onclick = async () => {
       const state = await (await aiFetch(base + '/api/jobs/' + encodeURIComponent(job.id))).json();
       aiMessage('Generating: ' + (state.status || 'processing') + '…', state.progress ?? 5);
       if (state.status === 'SUCCEEDED') {
-        aiMessage('Downloading textured GLB…', 99);
+        aiMessage('Downloading generated GLB…', 99);
         const blob = await (await aiFetch(base + '/api/jobs/' + encodeURIComponent(job.id) + '/model')).blob();
         if (run.cancelled) break;
         await importModel([new File([blob], 'generated-character.glb', {type:'model/gltf-binary'})]);
         if (EXT) {
           setModelMode(true);
           showView('anim');
-          aiMessage('Complete! Real 3D model imported. Rotate to inspect its back. Unrigged models can animate as a whole.', 100);
+          aiMessage('Complete! 3D mesh imported. Rotate to inspect its back. Rigging and texturing are separate steps.', 100);
         } else throw Error('Generated file could not be imported.');
         break;
       }
