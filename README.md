@@ -40,3 +40,18 @@ It's a single web page, so there's nothing to install or build.
 Open **Graphics & speed** in the animation inspector to choose **Original**, **Anime**, **Cartoon**, or **2D look**. Anime and cartoon modes posterize the light response while preserving imported image texture detail, transparency, existing model shape and rig. Adjust **Anime ink edge shading**, **Outline strength**, and **Cel shading bands** to taste. Settings persist in browser local storage.
 
 This is a shader-based stylization of the current geometry. It does **not** infer a complete 3D model from a single image or create a 2D illustration. No paid AI API is required. The page still needs access to its existing Three.js CDN resources on first load.
+\n\n## Geometry fixes (November 2026)\n\n- Independent rear mesh for every part rather than reusing the front surface.\n- Generated helmet/hair back uses a simplified color fill when no rear reference exists.\n- Narrower, side-colour edge ribbon to reduce the vertical stripe at the front/back join.\n- Increased foot depth to reduce paper-thin skates.\n- The image-only workflow is depth-based 2.5D reconstruction, not complete AI 3D generation. A rear view is needed for accurate back details.\n
+
+## Character-aware volume reconstruction
+
+The model builder now measures each isolated body-part silhouette row by row and creates smooth superellipse cross-sections. Head, torso, limbs and skates use different front/back depth profiles. The torso has a softer belly bulge; skates have a fuller forward-facing volume. The rear helmet is color-estimated without repeating the face.
+
+This is still a **single-image approximation**, not AI 3D reconstruction. It cannot infer hidden jersey numbers, helmet vents, facial anatomy, or accurately recreate the back without a separate rear reference. For best results, import a clean transparent PNG and supply back/side references when available.
+
+
+## Compact interface update
+
+- Desktop workspace now fits the viewport with a scrolling inspector and a bounded timeline.
+- A Hide controls / Show controls button provides a larger animation preview on desktop.
+- Responsive spacing, controls and stage sizing improve use on smaller windows and phones.
+- Existing modeling and animation functions are retained.
