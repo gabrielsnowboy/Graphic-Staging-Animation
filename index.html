@@ -50,6 +50,43 @@ h3{font-family:var(--f-display);font-weight:600;font-size:15px;margin:0}
 .label{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
 
 /* Import */
+
+/* Studio upload: compact, focused workspace */
+#v-import{max-width:1100px;margin:0 auto;width:100%;padding:22px 24px 30px!important}
+#v-import .import-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+#v-import .import-heading h2{margin:0;font-size:24px}
+#v-import .import-heading p{margin:5px 0 0;color:var(--muted);font-size:13px}
+#v-import .upload-switch{display:flex;gap:5px;padding:5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;width:max-content;max-width:100%;flex-wrap:wrap;margin-bottom:16px}
+#v-import .upload-switch button{background:transparent;color:var(--muted);border:0;border-radius:8px;padding:9px 17px;font-weight:600;cursor:pointer;font-size:13px}
+#v-import .upload-switch button[aria-selected="true"]{background:var(--accent);color:#07121c}
+#v-import .upload-panel{display:none}
+#v-import .upload-panel.is-active{display:block}
+#v-import .upload-hero{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:12px}
+#v-import .upload-hero h3{font-size:17px;margin:0 0 5px}
+#v-import .upload-hero p{font-size:13px;color:var(--muted);margin:0 0 14px}
+#v-import .upload-hero .drop{aspect-ratio:auto;height:210px;max-width:100%;border-radius:12px;background:#202a38}
+#v-import .upload-hero .drop .empty{background:transparent;font-weight:600}
+#v-import .upload-hero .drop canvas{height:100%;width:auto;object-fit:contain}
+#v-import .upload-hero .card{border:0;background:transparent;padding:0}
+#v-import .upload-hero .card-head{display:none}
+#v-import .upload-hero .check,#v-import .upload-hero .ctl,#v-import .upload-hero [id^="clean-"]{display:none}
+#v-import .upload-hero .card.advanced-open .check,#v-import .upload-hero .card.advanced-open .ctl,#v-import .upload-hero .card.advanced-open [id^="clean-"]{display:flex}
+#v-import .upload-hero .card.advanced-open [id^="clean-"]{align-self:start}
+#v-import .upload-secondary{display:none;margin-top:12px}
+#v-import .upload-secondary.is-open{display:block}
+#v-import .upload-secondary .import-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#v-import .upload-secondary .drop{aspect-ratio:auto;height:160px}
+#v-import .upload-secondary .refs{margin-top:12px}
+#v-import .upload-link{background:none;border:0;color:var(--accent);padding:8px 0;font-size:13px;cursor:pointer}
+#v-import .upload-actions{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:12px}
+#v-import .upload-actions .btn{min-height:38px}
+#v-import .upload-panel #ai3d,#v-import .upload-panel #mesh-first-workflow,#v-import .upload-panel [aria-labelledby="modelTitle"]{margin-top:0}
+#v-import #ai3d,#v-import [aria-labelledby="modelTitle"]{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;max-width:750px}
+#v-import #ai3d>p.note{max-width:68ch}
+#v-import #ai3d #ai-image{padding:13px;background:#202a38;border:1px dashed var(--line-2);border-radius:9px}
+#v-import .import-old-tips{display:none}
+@media(max-width:700px){#v-import{padding:14px!important}#v-import .upload-secondary .import-grid{grid-template-columns:1fr}#v-import .upload-switch{width:100%}#v-import .upload-switch button{flex:1;padding:9px 7px}}
+
 .import-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .card-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -348,18 +385,12 @@ body.roomy-ui #v-anim .anim-layout{grid-template-columns:74px clamp(205px,20vw,2
 @media(max-width:1120px){#v-anim .anim-layout{grid-template-columns:58px 190px minmax(0,1fr) 230px}.rail-tool{font-size:9px}header .brand small{display:none}}
 @media(max-width:850px){body{overflow:auto}.shell{height:auto;min-height:100dvh;overflow:visible}#v-anim{overflow:visible}#v-anim .anim-layout{display:grid;grid-template-columns:55px minmax(0,1fr);grid-template-rows:auto minmax(300px,55dvh) 150px auto;min-height:0;height:auto}#v-anim .asset-rail{grid-column:1;grid-row:1 / 5}#v-anim .asset-library{grid-column:2;grid-row:1;max-height:180px}#v-anim .stage{grid-column:2;grid-row:2;position:relative;top:auto;min-height:300px}#v-anim .timeline{grid-column:2;grid-row:3;height:150px;order:initial}#v-anim .inspector{grid-column:2;grid-row:4;max-height:360px;overflow:auto;order:initial}header{flex-wrap:wrap}}
 
-/* Keep the studio editor as the primary workspace; workflow tabs remain available. */
-header .tabs{max-width:380px;overflow-x:auto;scrollbar-width:none}
-header .tab{white-space:nowrap;font-size:12px}
-#v-anim .stage-frame{background:#242b36}
-#v-anim .empty-stage[hidden]{display:none!important}
-@media(min-width:980px){#v-anim .anim-layout{grid-template-rows:minmax(0,1fr) clamp(112px,19dvh,160px)}#v-anim .timeline{height:auto;min-height:0}}
 </style>
 
 <div class="shell">
   <header>
     <div class="brand"><span class="logo-mark">G</span> Graphic Staging <small>ANIMATION STUDIO</small></div>
-    <nav class="tabs" role="tablist" aria-label="Advanced workflow steps">
+    <nav class="tabs" role="tablist" aria-label="Steps">
       <button class="tab" role="tab" id="t-import" data-view="import"><b>1</b>Import</button>
       <button class="tab" role="tab" id="t-model" data-view="model"><b>2</b>Model</button>
       <button class="tab" role="tab" id="t-rig" data-view="rig"><b>3</b>Rig</button>
@@ -376,8 +407,14 @@ header .tab{white-space:nowrap;font-size:12px}
 
   <!-- IMPORT -->
   <section class="view" id="v-import" hidden>
-    <h2>Bring in your character</h2>
-    <p class="lede">The one picture you need is a head-to-toe view of the character facing you. A back view and a face close-up make the model more detailed, and more reference pictures below help too. Any background works.</p>
+    <div class="import-heading"><div><h2>Add your character</h2><p>Choose how to start. Your stage stays empty until you add something.</p></div></div>
+    <div class="upload-switch" role="tablist" aria-label="Import method">
+      <button type="button" role="tab" data-upload-mode="ai" aria-selected="true">✦ Generate 3D</button>
+      <button type="button" role="tab" data-upload-mode="mesh" aria-selected="false">⬡ Upload 3D</button>
+      <button type="button" role="tab" data-upload-mode="image" aria-selected="false">▧ Upload image</button>
+    </div>
+    <div class="upload-panel" data-upload-panel="image" role="tabpanel">
+      <div class="upload-hero"><h3>Upload a character image</h3><p>Choose a full-body image. PNG with transparency works best.</p>
     <div class="import-grid">
       <div class="card" data-kind="front">
         <div class="card-head"><h3>Full body · front</h3><span class="tag req">Required</span></div>
@@ -388,6 +425,9 @@ header .tab{white-space:nowrap;font-size:12px}
         <div class="ctl"><span>Edge trim</span><input type="range" id="trim-front" min="0" max="10" value="0"><output></output></div>
         <button class="btn sm" id="clean-front" disabled>Clean up cut-out…</button>
       </div>
+    </div></div>
+    <div class="upload-actions"><button type="button" class="upload-link" id="uploadAdvanced">More images &amp; cut-out settings ▾</button><button type="button" class="btn primary" id="uploadImageNext">Continue →</button></div>
+    <div class="upload-secondary" id="uploadSecondary"><div class="import-grid">
       <div class="card" data-kind="back">
         <div class="card-head"><h3>Full body · back</h3><span class="tag">Optional</span></div>
         <label class="drop" id="drop-back"><div class="empty">Drop an image or tap to choose</div><input type="file" accept="image/*" id="in-back"></label>
@@ -408,6 +448,7 @@ header .tab{white-space:nowrap;font-size:12px}
         <div class="row"><button class="btn sm" id="clean-face" disabled>Clean up cut-out…</button><button class="btn sm ghost" id="clr-face">Remove</button></div>
       </div>
     </div>
+    </div>
     <section class="refs" aria-labelledby="refsTitle">
       <div class="card-head"><h3 id="refsTitle">More reference pictures</h3><span class="tag">Optional · up to 8</span></div>
       <p class="note">Add other pictures of the same character: different poses, angles or backgrounds. Each one is cut out and checked. Mark what each picture shows. A <b>side view</b> sets how deep the body is when it turns, <b>back</b> and <b>face</b> pictures can fill those slots, and any full-body picture can become the main front.</p>
@@ -415,6 +456,8 @@ header .tab{white-space:nowrap;font-size:12px}
       <div class="refbar" id="refBar" hidden><button class="btn sm" id="pickBest" type="button">Use the best full-body picture as the main front</button><span class="note" id="refSummary"></span></div>
       <div class="refgrid" id="refGrid"></div>
     </section>
+    </div></div>
+    <div class="upload-panel is-active" data-upload-panel="ai" role="tabpanel">
     <section class="refs" id="ai3d" aria-label="AI image to 3D">
  <div class="card-head"><h3>Local AI image → true 3D</h3><span class="tag">Free · runs on your computer</span></div>
  <p class="note">Generate a real GLB with Hunyuan3D running on your computer. First start the Hunyuan API and the included local bridge. The image stays on your computer; no paid Meshy API key is required. Hunyuan may generate an untextured mesh depending on your setup.</p>
@@ -425,11 +468,15 @@ header .tab{white-space:nowrap;font-size:12px}
  <label class="note" for="ai-mode">Generation mode</label>
  <select id="ai-mode" style="width:100%;margin:6px 0 10px"><option value="geometry">Geometry only (works with your current server)</option><option value="texture" disabled>Geometry + textures (requires separate texture pipeline)</option></select>
  <p class="note" id="ai-texture-help">The current local Hunyuan server produces geometry only. To preserve the red helmet, face, jersey and skates, a compatible texture-generation pipeline must be installed separately. The app will never claim an untextured model is textured.</p>
- <div class="row"><button type="button" class="btn primary" id="ai-generate">Generate real 3D model</button><button type="button" class="btn" id="ai-cancel" disabled>Stop waiting</button></div>
+ <div class="row"><button type="button" class="btn" id="ai-rig-generated" disabled>Create poseable picture rig</button></div>
+  <p class="note">Hunyuan geometry-only output is usually a single unrigged mesh. The picture rig can pose separate image layers, but it is not a true 3D skeleton. For 3D bone animation, the mesh must be rigged separately.</p>
+  <div class="row"><button type="button" class="btn primary" id="ai-generate">Generate real 3D model</button><button type="button" class="btn" id="ai-cancel" disabled>Stop waiting</button></div>
  <p class="note" id="ai-status" role="status" aria-live="polite">Start Hunyuan3D and the local bridge, then choose an image.</p>
  <progress id="ai-progress" max="100" value="0" style="width:100%;display:none"></progress>
  <p class="note">The model runs locally on your computer, not on GitHub Pages. Cancelling stops checking but does not stop a generation already running. Generated meshes are usually unrigged.</p>
 </section>
+    </div>
+    <div class="upload-panel" data-upload-panel="mesh" role="tabpanel">
     <section class="refs" id="mesh-first-workflow" aria-label="True 3D workflow">
   <div class="card-head"><h3>True 3D workflow</h3><span class="tag">Recommended</span></div>
   <p class="note"><b>Real 360° geometry requires a mesh.</b> Import a GLB, glTF, FBX or OBJ produced by a dedicated image-to-3D generator. This loads the actual front, sides and back instead of stretching a picture into a shell. The picture-rig reconstruction remains available below as a legacy fallback.</p>
@@ -446,7 +493,7 @@ header .tab{white-space:nowrap;font-size:12px}
           <p class="note" id="modelText"></p>
           <div class="row">
             <button class="btn sm primary" id="modelAnimate" type="button">Animate this 3D model</button>
-            <button class="btn sm" id="modelPics" type="button">Make pictures for the picture rig</button>
+            <button class="btn sm" id="modelPics" type="button">Create poseable picture rig</button>
           </div>
           <div class="row">
             <button class="btn sm ghost" id="modelUpright" type="button">Stand it upright</button>
@@ -456,6 +503,8 @@ header .tab{white-space:nowrap;font-size:12px}
         </div>
       </div>
     </section>
+    </div>
+    <div class="import-old-tips">
     <ul class="tips">
       <li><b>Pose it like a paper doll.</b> Arms held a little away from the body (an A-pose) give the cleanest cut-outs.</li>
       <li><b>Any background.</b> Plain colours, gradients, scenes and screenshots are removed automatically; transparent PNGs are used as they are. Stars, text and other separate bits are dropped.</li>
@@ -463,6 +512,7 @@ header .tab{white-space:nowrap;font-size:12px}
       <li><b>Shadows or leftover background?</b> Open <b>Clean up cut-out</b> and tap them with Magic remove, or paint them away.</li>
     </ul>
     <div class="row"><button class="btn ghost" id="loadSample" hidden>Load sample</button><div class="spacer"></div><button class="btn primary" id="toRig">Next: build the 3D model →</button></div>
+    </div>
   </section>
 
   <!-- MODEL -->
@@ -3365,7 +3415,7 @@ $('#swapFB').onclick = async () => {
 $('#clr-back').onclick = () => { S.src.back = null; S.cut.back = null; S.edit.back = null; backAlignedCache = null; cutVer++; drawPreview('back'); $('#backCtl').hidden = true; S.dirty = true; toast('Back view removed. The back will be a shaded version of the front.'); };
 $('#clr-face').onclick = () => { S.src.face = null; S.cut.face = null; S.edit.face = null; S.face.useClose = false; S.face.fit = null; cutVer++; drawPreview('face'); $('#closeCtl').hidden = true; S.dirty = true; drawFace(); };
 $('#loadSample').onclick = () => { loadSample(); toast('Sample character loaded'); showView('anim'); };
-$('#toRig').onclick = () => { if (!S.cut.front) { toast('Add the full-body front image first.'); return; } showView('model'); };
+$('#toRig').onclick = async () => { if (!S.cut.front) { if (EXT) { await modelToPictures(); return; } toast('Import a full-body image or generate a 3D mesh first.'); return; } showView('model'); };
 
 /* ---------- 3D model files ---------- */
 let EXT = null;
@@ -3630,60 +3680,57 @@ async function importModel(files) {
     r.obj.traverse(o => { if (!o.isMesh) return; o.frustumCulled = false; const ms = Array.isArray(o.material) ? o.material : [o.material];
       ms.forEach(m => { if (!m) return; if (m.map) { m.map.anisotropy = 4; const src = (m.map.image && m.map.image.src) || m.map.name || ''; const nm = decodeURIComponent(src).split(/[\\/]/).pop().toLowerCase(); if (!m.map.image || missingTex.has(nm)) { m.map = null; m.needsUpdate = true; } }
         if (m.transparent && (m.opacity ?? 1) >= .99 && !m.alphaMap) { m.transparent = false; m.needsUpdate = true; } }); });
-    // Geometry-only Hunyuan GLBs typically have a white material and no color data.
-    // Preserve real textures, vertex colors, and nonwhite authored materials; only
-    // replace *untextured near-white* surfaces with a shaded neutral clay preview.
-    // Keep the original material reference so switching art styles stays reversible.
+    // Hunyuan geometry-only GLBs may use white vertex colours or an unlit
+    // MeshBasicMaterial. Treat uniformly white vertex colour attributes as
+    // uncoloured; preserve actual textured or genuinely coloured assets.
     let clayCount = 0;
     r.obj.traverse(o => {
-      if (!o.isMesh || !o.material || !o.geometry) return;
-      if (!o.geometry.attributes.normal && o.geometry.attributes.position) o.geometry.computeVertexNormals();
-      const colorAttr = o.geometry.attributes.color;
-      let blankVertexColor = false;
-      if (colorAttr && colorAttr.count) {
-        // AI shape models sometimes export all-white vertex colors, which are not useful textures.
-        let min=1, max=0;
-        for (let i=0;i<colorAttr.count;i+=Math.max(1,Math.floor(colorAttr.count/512))) {
-          for(let c=0;c<3;c++){const v=colorAttr.getComponent(i,c);min=Math.min(min,v);max=Math.max(max,v);}
+      if (!o.isMesh || !o.geometry || !o.material) return;
+      const geo = o.geometry;
+      if (!geo.attributes.normal && geo.attributes.position) geo.computeVertexNormals();
+      const vc = geo.attributes.color;
+      let meaningfulColors = false;
+      if (vc) {
+        // Sample across the buffer; uniform white is not useful texture data.
+        const stride = Math.max(1, Math.floor(vc.count / 2048));
+        for (let i=0; i<vc.count; i+=stride) {
+          if (Math.abs(vc.getX(i)-1)>.035 || Math.abs(vc.getY(i)-1)>.035 || Math.abs(vc.getZ(i)-1)>.035) { meaningfulColors=true; break; }
         }
-        blankVertexColor = min > .89 && max-min < .11;
       }
       const originals = Array.isArray(o.material) ? o.material : [o.material];
       const revised = originals.map(m => {
-        if (!m || m.map || m.emissiveMap || m.normalMap || m.isMeshDepthMaterial || m.isMeshNormalMaterial) return m;
-        if (colorAttr && !blankVertexColor) return m;
-        const nearWhite = !m.color || (m.color.r > .88 && m.color.g > .88 && m.color.b > .88);
-        if (!nearWhite && !(m.isMeshBasicMaterial && !m.map)) return m;
+        if (!m || m.map || m.emissiveMap || meaningfulColors ||
+            (m.color && (m.color.r < .90 || m.color.g < .90 || m.color.b < .90))) return m;
         const clay = new THREE.MeshStandardMaterial({
-          color: 0x91a9c2, roughness: .88, metalness: 0,
-          side: THREE.DoubleSide, transparent: !!m.transparent, opacity: m.opacity ?? 1,
-          alphaTest: m.alphaTest || 0, vertexColors: false
+          color:0x879bb4, roughness:.92, metalness:0,
+          side:THREE.DoubleSide, transparent:false, opacity:1,
+          skinning:!!o.isSkinnedMesh,
+          morphTargets:!!(o.morphTargetInfluences && o.morphTargetInfluences.length),
+          morphNormals:!!(geo.morphAttributes && geo.morphAttributes.normal),
+          vertexColors:false
         });
-        clayCount++;
-        return clay;
+        clayCount++; return clay;
       });
-      if (revised.some((m,i) => m !== originals[i])) {
+      if (revised.some((m,i)=>m!==originals[i])) {
         o.userData.gsaOriginalMaterials = revised;
         o.userData.gsaSourceMaterials = originals;
         o.material = Array.isArray(o.material) ? revised : revised[0];
       }
     });
-    if (clayCount) toast('Geometry-only model: neutral clay shading enabled. The original image colors require AI texturing.', 6500);
+    if (clayCount) toast('Untextured mesh: neutral shaded clay preview enabled. Original artwork colours require a texture-generation pipeline.', 7500);
     const bones = []; r.obj.traverse(o => { if (o.isBone) { o.userData.rq = o.quaternion.clone(); o.userData.rp = o.position.clone(); bones.push(o); } });
     EXT = { ...r, fix, wrap, bones, map: mapBones(bones), morphs: mapMorphs(r.obj), mixer: r.clips.length ? new THREE.AnimationMixer(r.obj) : null, curClip: -1, baseRot: new THREE.Euler() };
     // most STL and PLY files are stored lying down (Z up)
     if ((r.ext === 'stl' || r.ext === 'ply')) { const b = measureBox(r.obj), sz = b.getSize(new THREE.Vector3()); if (sz.z > sz.y * 1.15) fix.rotation.x = -Math.PI / 2; }
     EXT.baseRot.copy(fix.rotation);
     placeModel();
-    if (S.bg === '#00b140' || S.bg === '#ffffff') setBg('#242b36');
     applyImportedMeshStyle();
-    requestRender();
     S.modelFiles = r.files;
     $('#animSel').innerHTML = '<option value="-1">None: pose by hand</option>' + r.clips.map((c, i) => `<option value="${i}">${(c.name || 'Animation ' + (i + 1)).replace(/[<&>"]/g, '')} · ${c.duration.toFixed(1)} s</option>`).join('');
     $('#modelInfo').hidden = false; $('#modelText').textContent = describeModel(EXT); $('#modeSeg').hidden = false;
     S.pose.mb = {}; S.pose.ma = { clip: -1, t: 0 };
     drawModelThumb();
-    document.getElementById('emptyStage').hidden = true;
+    document.getElementById('ai-rig-generated').disabled = false;
     busy(null);
     toast(EXT.bones.length ? '3D model loaded. Press "Animate this 3D model" to pose it.' : '3D model loaded. It has no skeleton: animate it as a whole, or make pictures for the picture rig to pose it.', 5000);
   } catch (e) { busy(null); console.error(e); toast(e.message || 'That 3D file could not be read.', 7000); }
@@ -3692,7 +3739,7 @@ function removeModel(quiet) {
   if (!EXT) return;
   turntable.remove(EXT.wrap); EXT.wrap.traverse(o => { if (o.geometry) o.geometry.dispose(); const mats = [...(o.userData.gsaOriginalMaterials || []), ...(o.userData.gsaStyleMaterials || []), ...(o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : [])]; [...new Set(mats)].forEach(m => { if (m && m.dispose) { if (m.map) m.map.dispose(); m.dispose(); } }); });
   EXT.urls.forEach(u => URL.revokeObjectURL(u)); EXT = null; S.modelFiles = null;
-  setModelMode(false); $('#modelInfo').hidden = true; $('#modeSeg').hidden = true;
+  setModelMode(false); $('#modelInfo').hidden = true; $('#modeSeg').hidden = true; document.getElementById('ai-rig-generated').disabled = true;
   if (!quiet) toast('3D model removed');
 }
 async function modelToPictures() {
@@ -3781,6 +3828,7 @@ document.getElementById('ai-generate').onclick = async () => {
           if (!hasTexture && !hasVertexColor) toast('3D mesh imported, but it has no textures or vertex colours. This is expected from geometry-only Hunyuan generation.', 8000);
         }
         if (EXT) {
+          document.getElementById('ai-rig-generated').disabled = false;
           setModelMode(true);
           showView('anim');
           aiMessage('GLB imported. Check 3D model file details for texture status. Geometry-only models have no original character colours; rigging is separate.', 100);
@@ -3798,6 +3846,7 @@ $('#modelIn').addEventListener('change', e => { const f = [...e.target.files]; e
 { const dz = $('#modelDrop'); dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); }); dz.addEventListener('dragleave', () => dz.classList.remove('over')); dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); if (e.dataTransfer.files.length) importModel(e.dataTransfer.files); }); }
 $('#modelAnimate').onclick = () => { setModelMode(true); showView('anim'); toast(EXT && EXT.bones.length ? 'Drag a body part, or pick a bone in the Pose list, to pose the model.' : 'Use "Whole model" in the Pose list to tilt and turn it.', 4500); };
 $('#modelPics').onclick = () => modelToPictures();
+document.getElementById('ai-rig-generated').onclick = () => { if (EXT) modelToPictures(); else toast('Generate or import a 3D model first.'); };
 $('#modelRemove').onclick = () => removeModel();
 $('#modelUpright').onclick = () => { if (!EXT) return; EXT.fix.rotation.x = ((Math.round(EXT.fix.rotation.x / (Math.PI / 2)) + 1) % 4) * Math.PI / 2 * (EXT.fix.rotation.x < 0 ? 1 : 1) - Math.PI / 2; EXT.baseRot.copy(EXT.fix.rotation); placeModel(); drawModelThumb(); applyPose(S.pose); };
 $('#modelTurn').onclick = () => { if (!EXT) return; EXT.fix.rotation.y += Math.PI / 2; EXT.baseRot.copy(EXT.fix.rotation); placeModel(); drawModelThumb(); applyPose(S.pose); };
@@ -4269,7 +4318,19 @@ function showView(v) {
   else if (v === 'anim') { const go = () => { applyPose(S.pose); updateMarker(); layoutStage(); renderTimeline(); }; if (S.dirty || !M.root) { busy(buildMsg()); setTimeout(() => { buildModel(); busy(null); if (S.view === 'anim') go(); }, 30); } else go(); }
   if (playing && v !== 'anim') stopPlay();
 }
-$$('.tab').forEach(t => t.addEventListener('click', () => { if (t.dataset.view !== 'import' && !S.cut.front) { toast('Add the full-body front image first.'); return; } showView(t.dataset.view); }));
+$$('.tab').forEach(t => t.addEventListener('click', async () => {
+  const v=t.dataset.view;
+  if (v==='rig' && !S.cut.front && EXT) {
+    toast('Creating a poseable picture rig from the 3D model…', 4500);
+    await modelToPictures(); return;
+  }
+  if (v!=='import' && v!=='anim' && !S.cut.front) {
+    if (EXT) { showView('anim'); toast('3D mesh loaded. Use Animate, or Create poseable picture rig to place joints.'); }
+    else toast('Import a character image or generate a 3D mesh first.');
+    return;
+  }
+  showView(v);
+}));
 
 /* ---------- sample character (original design) ---------- */
 const SJ = { headTop: { x: 300, y: 62 }, neck: { x: 300, y: 288 }, shoulderR: { x: 228, y: 318 }, elbowR: { x: 180, y: 450 }, wristR: { x: 150, y: 568 }, handR: { x: 136, y: 628 }, shoulderL: { x: 372, y: 318 }, elbowL: { x: 420, y: 450 }, wristL: { x: 450, y: 568 }, handL: { x: 464, y: 628 }, hipR: { x: 258, y: 598 }, kneeR: { x: 252, y: 750 }, ankleR: { x: 250, y: 900 }, toeR: { x: 246, y: 968 }, hipL: { x: 342, y: 598 }, kneeL: { x: 348, y: 750 }, ankleL: { x: 350, y: 900 }, toeL: { x: 354, y: 968 } };
@@ -4348,6 +4409,8 @@ applyLayout();
  apply();
 })();
 </script>
+</html>
+
 <script>
 (function(){
   const empty=document.getElementById('emptyStage');
@@ -4364,11 +4427,31 @@ applyLayout();
   };
   document.querySelectorAll('[data-asset-tab]').forEach(b=>b.addEventListener('click',()=>chooseTab(b.dataset.assetTab)));
   document.getElementById('quickMeshImport')?.addEventListener('click',()=>document.getElementById('modelIn')?.click());
-  // Hide the empty stage only after the model import completes successfully.
+  document.getElementById('modelIn')?.addEventListener('change',()=>{empty.hidden=true;});
+  document.getElementById('in-front')?.addEventListener('change',()=>{empty.hidden=true;});
   const observer=new MutationObserver(updateEmpty);
   const info=document.getElementById('modelInfo');if(info)observer.observe(info,{attributes:true,attributeFilter:['hidden']});
   updateEmpty();
 })();
 </script>
-</body>
-</html>
+
+<script>
+(function(){
+  const root=document.getElementById('v-import');
+  if(!root)return;
+  const tabs=[...root.querySelectorAll('[data-upload-mode]')];
+  const panels=[...root.querySelectorAll('[data-upload-panel]')];
+  function select(mode){
+    tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.uploadMode===mode)));
+    panels.forEach(p=>p.classList.toggle('is-active',p.dataset.uploadPanel===mode));
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>select(t.dataset.uploadMode)));
+  document.getElementById('uploadAdvanced')?.addEventListener('click',()=>{
+    const panel=document.getElementById('uploadSecondary');
+    const open=panel.classList.toggle('is-open');
+    document.querySelector('#v-import .upload-hero .card')?.classList.toggle('advanced-open',open);
+    document.getElementById('uploadAdvanced').textContent=open?'Hide advanced options ▴':'More images & cut-out settings ▾';
+  });
+  document.getElementById('uploadImageNext')?.addEventListener('click',()=>document.getElementById('toRig')?.click());
+})();
+</script>
