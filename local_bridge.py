@@ -1,7 +1,5 @@
 """Local-only Hunyuan3D bridge for Graphic Staging Animation (Python 3.10–3.12; standard library)."""
-import base64, io, json, os, threading, uuid, urllib.request, urllib.error
-from email.parser import BytesParser
-from email.policy import default
+import base64, cgi, io, json, os, threading, uuid, urllib.request, urllib.error
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 
@@ -35,14 +33,13 @@ class Handler(BaseHTTPRequestHandler):
     def _origin(self):
         origin=self.headers.get('Origin','')
         # The API binds to loopback, so it is not accessible directly from other computers.
-        return origin in ('','http://localhost','http://127.0.0.1','https://gabrielsnowboy.github.io')
+        return origin in ('','null','http://localhost','http://127.0.0.1') or origin.startswith('https://') and origin.endswith('.github.io')
     def send(self,code,data,kind='application/json'):
         if isinstance(data,dict): data=json.dumps(data).encode()
         self.send_response(code)
         self.send_header('Content-Type',kind)
         self.send_header('Cache-Control','no-store')
-        self.send_header('Access-Control-Allow-Origin',self.headers.get('Origin') or 'http://127.0.0.1')
-        self.send_header('Vary','Origin')
+        self.send_header('Access-Control-Allow-Origin',self.headers.get('Origin') or '*')
         self.send_header('Access-Control-Allow-Methods','GET,POST,OPTIONS')
         self.send_header('Access-Control-Allow-Headers','Content-Type')
         self.send_header('Content-Length',str(len(data)))
@@ -56,15 +53,11 @@ class Handler(BaseHTTPRequestHandler):
         try:
             length=int(self.headers.get('Content-Length','0'))
             if length<1 or length>MAX_IMAGE+8192:raise ValueError('Image too large (8 MB maximum)')
-            content_type=self.headers.get('Content-Type','')
-            if not content_type.lower().startswith('multipart/form-data;') or 'boundary=' not in content_type.lower():
-                raise ValueError('Expected multipart image upload')
-            raw=self.rfile.read(length)
-            message=BytesParser(policy=default).parsebytes(('Content-Type: '+content_type+'\r\nMIME-Version: 1.0\r\n\r\n').encode()+raw)
-            if not message.is_multipart(): raise ValueError('Invalid multipart upload')
-            images=[part for part in message.iter_parts() if part.get_param('name',header='content-disposition')=='image']
-            if len(images)!=1: raise ValueError('Expected one image field')
-            img=images[0].get_payload(decode=True) or b''
+            content_type, params=cgi.parse_header(self.headers.get('Content-Type',''))
+            if content_type!='multipart/form-data' or 'boundary' not in params:raise ValueError('Expected multipart image upload')
+            form=cgi.FieldStorage(fp=io.BytesIO(self.rfile.read(length)),headers=self.headers,environ={'REQUEST_METHOD':'POST','CONTENT_TYPE':self.headers['Content-Type']})
+            if 'image' not in form:raise ValueError('Missing image field')
+            item=form['image'];img=item.file.read(MAX_IMAGE+1)
             if len(img)>MAX_IMAGE or not img:raise ValueError('Invalid image size')
             if not (img.startswith(b'\x89PNG\r\n\x1a\n') or img.startswith(b'\xff\xd8') or img.startswith(b'RIFF') and img[8:12]==b'WEBP'):raise ValueError('Only PNG, JPEG, WebP images are accepted')
             jid=str(uuid.uuid4())

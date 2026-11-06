@@ -306,53 +306,11 @@ body.roomy-ui .brand small{display:inline}
  body.roomy-ui .inspector .sec{padding:0 14px 14px;gap:9px}
 }
 
-
-/* Editor redesign: inspired by a character-animation studio layout; no bundled models. */
-:root{--bg:#10151d;--panel:#181e27;--panel-2:#232b38;--line:#303b4b;--accent:#64c9fa;--r:5px}
-body{margin:0;overflow:hidden}
-.shell{height:100dvh;min-height:0;padding:0;overflow:hidden}
-header{flex:none;min-height:52px;padding:6px 14px;background:linear-gradient(100deg,#3735ac,#3566ce 58%,#168ba8);gap:10px;border-bottom:1px solid rgba(255,255,255,.12)}
-header .brand{font-size:15px;align-items:center;gap:8px;white-space:nowrap}
-header .brand small{color:#d0e7ff;font-size:9px}
-.logo-mark{display:inline-grid;place-items:center;width:31px;height:31px;border-radius:7px;background:#40d2d3;color:#10294b;font-size:22px;font-weight:800}
-header .tabs{background:rgba(9,24,70,.24);border-color:rgba(255,255,255,.18)}
-header .tab{color:#f0f5ff}header .tab b{color:#bdd3ff}
-header .tab[aria-selected=true]{background:#70d1fa;color:#092a4c}
-header .btn{background:rgba(15,32,91,.2);border-color:rgba(255,255,255,.22);color:white}
-header .btn:hover{background:rgba(255,255,255,.15)}
-.view{min-height:0;overflow:auto;padding:14px 18px 10px}
-#v-anim{padding:0;overflow:hidden}
-#v-anim .anim-layout{display:grid;grid-template-columns:74px clamp(205px,20vw,290px) minmax(0,1fr) clamp(235px,21vw,300px);grid-template-rows:minmax(0,1fr) 170px;gap:0;height:100%;min-height:0}
-#v-anim .asset-rail{grid-column:1;grid-row:1 / 3;background:#0b0e14;border-right:1px solid #303644;display:flex;flex-direction:column;padding:12px 4px;gap:6px}
-.rail-tool{border:0;background:transparent;color:#9ca8bc;min-height:66px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;font-size:10px;cursor:pointer;border-radius:5px}
-.rail-tool span{font-size:24px;line-height:1}.rail-tool:hover,.rail-tool.active{background:#222d3c;color:#eff8ff}
-#v-anim .asset-library{grid-column:2;grid-row:1 / 3;min-width:0;background:#1a2028;border-right:1px solid #344050;overflow-y:auto}
-.asset-tabs{display:flex;border-bottom:1px solid #3b4655;position:sticky;top:0;background:#1a2028;z-index:2}
-.asset-tab{flex:1;padding:15px 4px;border:0;border-bottom:2px solid transparent;background:transparent;color:#a7b1bf;cursor:pointer}
-.asset-tab.active{border-color:#70d0ff;color:white;font-weight:700}
-.asset-pane{padding:17px 13px;display:flex;flex-direction:column;gap:13px}.asset-pane[hidden]{display:none}
-.asset-pane h3{font-size:14px}.asset-empty{border:1px dashed #455061;border-radius:9px;padding:28px 12px;text-align:center;color:#b0bdce}
-.asset-empty-icon{font-size:38px;display:block;color:#7b8b9f}.asset-empty strong{display:block;color:#eaf2ff;margin-top:8px}
-.asset-empty p{font-size:12px}.asset-action{width:100%;white-space:normal}
-#v-anim .stage{grid-column:3;grid-row:1;min-height:0;height:100%;border-radius:0;border:0;background:#222f40;background-image:radial-gradient(circle at 65% 30%,#415c7c,#26364b 55%,#1c2735)}
-#v-anim .inspector{grid-column:4;grid-row:1 / 3;border-radius:0;border:0;border-left:1px solid #384457}
-#v-anim .timeline{grid-column:3;grid-row:2;max-height:none;height:170px;border-radius:0;border:0;border-top:1px solid #364150;padding:8px 10px;background:#111720;overflow:hidden}
-#v-anim .tl-bar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
-#v-anim .tl-bar .btn{flex-shrink:0}
-#v-anim .track{flex:1;min-height:0}
-#v-anim #wave{height:28px}#v-anim #cells{min-height:65px}#v-anim .cell .th{height:43px}
-#v-anim .empty-stage{position:absolute;z-index:8;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:12px;padding:25px;background:radial-gradient(circle at 50% 40%,#354d6a,#1c2b3d 70%)}
-.empty-stage h2{font-size:26px;margin:0}.empty-stage p{color:#b7c7d9;max-width:320px;margin:0 0 8px}.empty-stage-icon{font-size:65px;line-height:1;color:#78cbf7}
-#v-anim .stage:has(.empty-stage:not([hidden])) .hud,#v-anim .stage:has(.empty-stage:not([hidden])) .hud-bottom{display:none}
-body.roomy-ui #v-anim .anim-layout{grid-template-columns:74px clamp(205px,20vw,290px) minmax(0,1fr) clamp(235px,21vw,300px);gap:0}
-@media(max-width:1120px){#v-anim .anim-layout{grid-template-columns:58px 190px minmax(0,1fr) 230px}.rail-tool{font-size:9px}header .brand small{display:none}}
-@media(max-width:850px){body{overflow:auto}.shell{height:auto;min-height:100dvh;overflow:visible}#v-anim{overflow:visible}#v-anim .anim-layout{display:grid;grid-template-columns:55px minmax(0,1fr);grid-template-rows:auto minmax(300px,55dvh) 150px auto;min-height:0;height:auto}#v-anim .asset-rail{grid-column:1;grid-row:1 / 5}#v-anim .asset-library{grid-column:2;grid-row:1;max-height:180px}#v-anim .stage{grid-column:2;grid-row:2;position:relative;top:auto;min-height:300px}#v-anim .timeline{grid-column:2;grid-row:3;height:150px;order:initial}#v-anim .inspector{grid-column:2;grid-row:4;max-height:360px;overflow:auto;order:initial}header{flex-wrap:wrap}}
-
 </style>
 
 <div class="shell">
   <header>
-    <div class="brand"><span class="logo-mark">G</span> Graphic Staging <small>ANIMATION STUDIO</small></div>
+    <div class="brand">Graphic Staging Animation <small>2.5D PUPPET · FRAME BY FRAME</small></div>
     <nav class="tabs" role="tablist" aria-label="Steps">
       <button class="tab" role="tab" id="t-import" data-view="import"><b>1</b>Import</button>
       <button class="tab" role="tab" id="t-model" data-view="model"><b>2</b>Model</button>
@@ -416,9 +374,6 @@ body.roomy-ui #v-anim .anim-layout{grid-template-columns:74px clamp(205px,20vw,2
  <input id="ai-endpoint" type="url" placeholder="http://127.0.0.1:8787" style="width:100%;padding:10px;border-radius:8px;background:#121a29;color:#fff;border:1px solid #475569" autocomplete="url">
  <label class="note" for="ai-image">Image to reconstruct</label>
  <input id="ai-image" type="file" accept="image/png,image/jpeg,image/webp" style="display:block;width:100%;margin:8px 0 12px">
- <label class="note" for="ai-mode">Generation mode</label>
- <select id="ai-mode" style="width:100%;margin:6px 0 10px"><option value="geometry">Geometry only (works with your current server)</option><option value="texture" disabled>Geometry + textures (requires separate texture pipeline)</option></select>
- <p class="note" id="ai-texture-help">The current local Hunyuan server produces geometry only. To preserve the red helmet, face, jersey and skates, a compatible texture-generation pipeline must be installed separately. The app will never claim an untextured model is textured.</p>
  <div class="row"><button type="button" class="btn primary" id="ai-generate">Generate real 3D model</button><button type="button" class="btn" id="ai-cancel" disabled>Stop waiting</button></div>
  <p class="note" id="ai-status" role="status" aria-live="polite">Start Hunyuan3D and the local bridge, then choose an image.</p>
  <progress id="ai-progress" max="100" value="0" style="width:100%;display:none"></progress>
@@ -456,7 +411,7 @@ body.roomy-ui #v-anim .anim-layout{grid-template-columns:74px clamp(205px,20vw,2
       <li><b>Match front and back.</b> A similar pose on both views helps. You can scale and shift the back to line it up on the Rig step.</li>
       <li><b>Shadows or leftover background?</b> Open <b>Clean up cut-out</b> and tap them with Magic remove, or paint them away.</li>
     </ul>
-    <div class="row"><button class="btn ghost" id="loadSample" hidden>Load sample</button><div class="spacer"></div><button class="btn primary" id="toRig">Next: build the 3D model →</button></div>
+    <div class="row"><button class="btn ghost" id="loadSample">Load the sample character</button><div class="spacer"></div><button class="btn primary" id="toRig">Next: build the 3D model →</button></div>
   </section>
 
   <!-- MODEL -->
@@ -544,29 +499,7 @@ body.roomy-ui #v-anim .anim-layout{grid-template-columns:74px clamp(205px,20vw,2
   <!-- ANIMATE -->
   <section class="view" id="v-anim" hidden>
     <div class="anim-layout">
-      <aside class="asset-rail" aria-label="Editor tools">
-        <button type="button" class="rail-tool active" data-asset-tab="characters"><span>♙</span>Character</button>
-        <button type="button" class="rail-tool" data-asset-tab="upload"><span>⇧</span>Upload</button>
-        <button type="button" class="rail-tool" data-open-view="import"><span>✦</span>AI Create</button>
-        <button type="button" class="rail-tool" data-open-view="rig"><span>♧</span>Rig</button>
-        <button type="button" class="rail-tool" data-asset-tab="timeline"><span>▤</span>Timeline</button>
-      </aside>
-      <aside class="asset-library" aria-label="Character library">
-        <div class="asset-tabs"><button class="asset-tab active" type="button" data-asset-tab="characters">Characters</button><button class="asset-tab" type="button" data-asset-tab="upload">Upload</button></div>
-        <div class="asset-pane" id="assetCharacters">
-          <h3>Your characters</h3>
-          <div class="asset-empty"><span class="asset-empty-icon">◇</span><strong>No characters yet</strong><p>Import a model or generate one locally to start animating.</p></div>
-          <button type="button" class="btn primary asset-action" data-open-view="import">+ Add a character</button>
-        </div>
-        <div class="asset-pane" id="assetUpload" hidden>
-          <h3>Import assets</h3>
-          <button type="button" class="btn primary asset-action" data-open-view="import">Import character image</button>
-          <button type="button" class="btn asset-action" id="quickMeshImport">Import 3D model (GLB, FBX…)</button>
-          <p class="note">Your files stay on your device unless you choose to use a connected generation service.</p>
-        </div>
-      </aside>
       <div class="stage" id="stage">
-        <div class="empty-stage" id="emptyStage"><div class="empty-stage-icon">◇</div><h2>Your stage is ready</h2><p>No default characters. Add your own image or 3D model to begin.</p><button class="btn primary" type="button" data-open-view="import">+ Import a character</button></div>
         <div class="stage-frame" id="stageFrame">
           <img id="onion" alt="" hidden>
           <img id="playImg" alt="" hidden>
@@ -810,7 +743,7 @@ const S = {
   joints: null, widths: { arm: 50, leg: 66, head: 220, torso: 1 },
   keyed: {}, edit: {}, backAlign: { scale: 1, x: 0, y: 0, mirror: true },
   face: { eyeR: { x: 0, y: 0 }, eyeL: { x: 0, y: 0 }, mouth: { x: 0, y: 0 }, eyeSize: .07, mouthSize: .11, skin: '#f0c39f', line: '#2b2230', lid: null, manual: false, useClose: false, fit: null, extend: true, cScale: 1, cX: 0, cY: 0, ce: { eyeR: { x: .4, y: .46 }, eyeL: { x: .6, y: .46 } } },
-  pose: defaultPose(), bg: '#242b36', out: { w: 1080, h: 1080 },
+  pose: defaultPose(), bg: '#00b140', out: { w: 1080, h: 1080 },
   frames: [], sel: -1, fps: 12, audio: null, follow: true, sens: 1, onion: true,
   dragMode: 'swing', selPart: 'uArmR', dirty: true, view: 'anim', backStyle: 'clean',
 };
@@ -3537,13 +3470,6 @@ function describeModel(X) {
   if (X.morphs.length) bits.push(`${new Set(X.morphs.map(m => m.kind)).size} face shapes drive expressions and lip-sync.`);
   if (X.clips.length) bits.push(`${X.clips.length} animation${X.clips.length > 1 ? 's' : ''} in the file.`);
   if (X.missing.size) bits.push(`Missing texture files: ${[...X.missing].slice(0, 4).join(', ')}. Select them together with the model.`);
-  let textured = 0, vertexColored = 0, meshesWithMaterial = 0;
-  X.obj.traverse(o => { if (!o.isMesh) return; const mats = Array.isArray(o.material) ? o.material : [o.material];
-    if (mats.some(m => m && (m.map || m.emissiveMap))) textured++;
-    if (o.geometry && o.geometry.attributes && o.geometry.attributes.color) vertexColored++;
-    if (mats.some(Boolean)) meshesWithMaterial++;
-  });
-  bits.push(textured ? `${textured} mesh(es) contain texture maps.` : vertexColored ? `No texture maps; ${vertexColored} mesh(es) have vertex colours.` : 'No texture maps or vertex colours found: this model will appear as a plain material.');
   return bits.join(' ');
 }
 function drawModelThumb() {
@@ -3615,7 +3541,7 @@ async function importModel(files) {
     // a texture that is not among the selected files would draw that part blank: show its plain colour instead
     const missingTex = new Set([...r.missing].map(n => n.toLowerCase()));
     r.obj.traverse(o => { if (!o.isMesh) return; o.frustumCulled = false; const ms = Array.isArray(o.material) ? o.material : [o.material];
-      ms.forEach(m => { if (!m) return; if (m.map) { m.map.anisotropy = 4; const src = (m.map.image && m.map.image.src) || m.map.name || ''; const nm = decodeURIComponent(src).split(/[\\/]/).pop().toLowerCase(); if (!m.map.image || missingTex.has(nm)) { m.map = null; m.needsUpdate = true; } }
+      ms.forEach(m => { if (!m) return; if (m.map) { m.map.anisotropy = 4; const src = (m.map.image && m.map.image.src) || m.map.name || ''; const nm = decodeURIComponent(src).split(/[\\/]/).pop().toLowerCase(); if (!m.map.image || missingTex.has(nm) || (/^https?:/.test(src) && !src.startsWith(location.origin))) { m.map = null; m.needsUpdate = true; } }
         if (m.transparent && (m.opacity ?? 1) >= .99 && !m.alphaMap) { m.transparent = false; m.needsUpdate = true; } }); });
     const bones = []; r.obj.traverse(o => { if (o.isBone) { o.userData.rq = o.quaternion.clone(); o.userData.rp = o.position.clone(); bones.push(o); } });
     EXT = { ...r, fix, wrap, bones, map: mapBones(bones), morphs: mapMorphs(r.obj), mixer: r.clips.length ? new THREE.AnimationMixer(r.obj) : null, curClip: -1, baseRot: new THREE.Euler() };
@@ -3714,21 +3640,10 @@ document.getElementById('ai-generate').onclick = async () => {
         const blob = await (await aiFetch(base + '/api/jobs/' + encodeURIComponent(job.id) + '/model')).blob();
         if (run.cancelled) break;
         await importModel([new File([blob], 'generated-character.glb', {type:'model/gltf-binary'})]);
-        // Switch from chroma green to a neutral preview for newly generated 3D meshes.
-        if (S.bg === '#00b140') setBg('#242b36');
-        if (EXT) {
-          let hasTexture = false, hasVertexColor = false;
-          EXT.obj.traverse(o => { if (!o.isMesh) return;
-            if (o.geometry && o.geometry.attributes && o.geometry.attributes.color) hasVertexColor = true;
-            const mats = Array.isArray(o.material) ? o.material : [o.material];
-            if (mats.some(m => m && (m.map || m.emissiveMap))) hasTexture = true;
-          });
-          if (!hasTexture && !hasVertexColor) toast('3D mesh imported, but it has no textures or vertex colours. This is expected from geometry-only Hunyuan generation.', 8000);
-        }
         if (EXT) {
           setModelMode(true);
           showView('anim');
-          aiMessage('GLB imported. Check 3D model file details for texture status. Geometry-only models have no original character colours; rigging is separate.', 100);
+          aiMessage('Complete! 3D mesh imported. Rotate to inspect its back. Rigging and texturing are separate steps.', 100);
         } else throw Error('Generated file could not be imported.');
         break;
       }
@@ -4197,7 +4112,7 @@ $('#toRig2').onclick = () => showView('rig');
 
 /* ---------- views ---------- */
 function showView(v) {
-  if (v !== 'import' && !S.cut.front && v !== 'anim') v = 'import';
+  if (v !== 'import' && !S.cut.front) v = 'import';
   if (v === 'model' && S.modelMode && EXT) v = 'anim';
   const was = S.view;
   S.view = v; document.body.classList.toggle('in-anim', v === 'anim'); document.body.classList.toggle('in-model', v === 'model'); $('#mBar').hidden = !(mq.matches && v === 'anim');
@@ -4210,8 +4125,7 @@ function showView(v) {
   if (was !== v) window.scrollTo(0, 0);
   if (v === 'rig') { drawRig(); drawFace(); drawClose(); }
   if (v === 'model') enterModelView();
-  if (v === 'anim' && !S.cut.front && !EXT) { layoutStage(); renderTimeline(); }
-  else if (v === 'anim') { const go = () => { applyPose(S.pose); updateMarker(); layoutStage(); renderTimeline(); }; if (S.dirty || !M.root) { busy(buildMsg()); setTimeout(() => { buildModel(); busy(null); if (S.view === 'anim') go(); }, 30); } else go(); }
+  if (v === 'anim') { const go = () => { applyPose(S.pose); updateMarker(); layoutStage(); renderTimeline(); }; if (S.dirty || !M.root) { busy(buildMsg()); setTimeout(() => { buildModel(); busy(null); if (S.view === 'anim') go(); }, 30); } else go(); }
   if (playing && v !== 'anim') stopPlay();
 }
 $$('.tab').forEach(t => t.addEventListener('click', () => { if (t.dataset.view !== 'import' && !S.cut.front) { toast('Add the full-body front image first.'); return; } showView(t.dataset.view); }));
@@ -4277,6 +4191,7 @@ function loadSample() {
 /* ---------- boot ---------- */
 syncGfxUI(); createRenderer(); applyShading(); applyArtStyle();
 renderSwatches(); setBg(S.bg); selectPart('uArmR'); updateAudioUI();
+loadSample();
 showView('anim');
 applyLayout();
 })();
@@ -4294,27 +4209,3 @@ applyLayout();
 })();
 </script>
 </html>
-
-<script>
-(function(){
-  const empty=document.getElementById('emptyStage');
-  const updateEmpty=()=>{ if(!empty)return; const hasAsset=!!(document.getElementById('modelInfo') && !document.getElementById('modelInfo').hidden) || !!(document.querySelector('#drop-front canvas')) || !!(document.querySelector('#stageFrame canvas') && document.querySelector('#stageFrame canvas').dataset.hasModel); if(hasAsset)empty.hidden=true; };
-  document.querySelectorAll('[data-open-view]').forEach(b=>b.addEventListener('click',()=>{
-    const target=document.getElementById('t-'+b.dataset.openView);
-    if(target)target.click();
-  }));
-  const chooseTab=(name)=>{
-    document.getElementById('assetCharacters').hidden=name!=='characters';
-    document.getElementById('assetUpload').hidden=name!=='upload';
-    document.querySelectorAll('[data-asset-tab]').forEach(b=>b.classList.toggle('active',b.dataset.assetTab===name));
-    if(name==='timeline')document.querySelector('#v-anim .timeline')?.scrollIntoView({block:'nearest'});
-  };
-  document.querySelectorAll('[data-asset-tab]').forEach(b=>b.addEventListener('click',()=>chooseTab(b.dataset.assetTab)));
-  document.getElementById('quickMeshImport')?.addEventListener('click',()=>document.getElementById('modelIn')?.click());
-  document.getElementById('modelIn')?.addEventListener('change',()=>{empty.hidden=true;});
-  document.getElementById('in-front')?.addEventListener('change',()=>{empty.hidden=true;});
-  const observer=new MutationObserver(updateEmpty);
-  const info=document.getElementById('modelInfo');if(info)observer.observe(info,{attributes:true,attributeFilter:['hidden']});
-  updateEmpty();
-})();
-</script>
